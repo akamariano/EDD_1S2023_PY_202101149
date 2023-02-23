@@ -1,7 +1,7 @@
 digraph Queue {
-	n0 [label="Karin\nRac\n12334\n12"];
-	n1 [label="Popsi\n1234\n123\n1"];
-	n2 [label="Leo\nmessi\n123123123\n123123"];
+	n0 [label="Leonardo\nMartinez\n201780044\nleo1234"];
+	n1 [label="Cristian\nSuy\n201709018\ncris1234"];
+	n2 [label="Ebany\nLarios\n201403877\nqwerty12"];
 	n0 -> n1;
 	n1 -> n2;
 }

@@ -71,6 +71,7 @@ func (q *Queue) Print() {
 	}
 }
 func (q *Queue) GenerateGraph() {
+	
 	if q.IsEmpty() {
 		fmt.Println("La cola está vacía")
 		return

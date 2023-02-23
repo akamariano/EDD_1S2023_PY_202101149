@@ -1,0 +1,4 @@
+digraph G {
+	rankdir=TB;
+	"0xc000008180" [label="Se aceptó estudiante el : 2023-02-23 11:38:55", shape=box]
+}
