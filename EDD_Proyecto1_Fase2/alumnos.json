@@ -1,0 +1,16 @@
+{
+	"alumnos": [
+		{
+			"nombre": "Juan Pérez",
+			"carnet": "12345",
+			"password": "abc123",
+			"Carpeta_raiz": "C:/Usuarios/Juan"
+		},
+		{
+			"nombre": "María García",
+			"carnet": "67890",
+			"password": "def456",
+			"Carpeta_raiz": "C:/Usuarios/María"
+		}
+	]
+}
