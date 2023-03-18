@@ -1,0 +1,37 @@
+{
+	"alumnos": [
+		{
+			"nombre": "Juan Pérez",
+			"carnet": "12345",
+			"password": "abc123",
+			"Carpeta_raiz": "C:/Usuarios/Juan"
+		},
+		{
+			"nombre": "María García",
+			"carnet": "67890",
+			"password": "def456",
+			"Carpeta_raiz": "C:/Usuarios/María"
+		}
+		,
+		{
+			"nombre": "Mora",
+			"carnet": "123123123",
+			"password": "def456",
+			"Carpeta_raiz": "C:/Usuarios/Mora"
+		}
+		,
+		{
+			"nombre": "Bad Bunny",
+			"carnet": "123123",
+			"password": "def456",
+			"Carpeta_raiz": "C:/Usuarios/Benito"
+		}
+		,
+		{
+			"nombre": "Mariano Rac",
+			"carnet": "202101149",
+			"password": "def456",
+			"Carpeta_raiz": "C:/Usuarios/Marano"
+		}
+	]
+}
