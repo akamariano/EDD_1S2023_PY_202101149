@@ -1,5 +1,5 @@
 // Método para cargar el archivo JSON
-var graphText=""
+let graphText=""
 var alumnos=[];
 function loadJSON(callback) {
 	var input = document.createElement('input');
@@ -179,11 +179,14 @@ return nodo;
 	}
 // Función para imprimir el árbol AVL
 imprimir() {
+	this.imprimirNodo(this.raiz);
 	let graph = "digraph G {\n";
 	graph += "node [fontname=\"Arial\"];\n";
 	graph += this.imprimirNodo1(this.raiz);
 	graph += "}";
 	console.log(graph)
+	graphText=graph
+	// console.log("TEXTTTT"+graphText+"TERMINA")
 	return graph;
   }
   imprimirNodo1(nodo) {
@@ -191,7 +194,7 @@ imprimir() {
 	if (nodo !== null) {
 	  graph += `"${nodo.valor} - ${nodo.nombre}\\n${nodo.altura}" [shape=rectangle, style=filled, fillcolor=white];\n`;
 	  if (nodo.izquierdo !== null) {
-		graph += `"${nodo.valor} - ${nodo.nombre}\\n${nodo.altura}" -> "${nodo.izquierdo.valor} - ${nodo.izquierdo.nombre}\\n${nodo.izquierdo.altu}";\n`;
+		graph += `"${nodo.valor} - ${nodo.nombre}\\n${nodo.altura}" -> "${nodo.izquierdo.valor} - ${nodo.izquierdo.nombre}\\n${nodo.izquierdo.altura}";\n`;
 	  }
 	  if (nodo.derecho !== null) {
 		graph += `"${nodo.valor} - ${nodo.nombre}\\n${nodo.altura}" -> "${nodo.derecho.valor} - ${nodo.derecho.nombre}\\n${nodo.derecho.altura}";\n`;
@@ -199,12 +202,13 @@ imprimir() {
 	  graph += this.imprimirNodo1(nodo.izquierdo);
 	  graph += this.imprimirNodo1(nodo.derecho);
 	}
-	const miParrafo = document.getElementById("miParrafo");
-	miParrafo.textContent = graph;
+	// const miParrafo = document.getElementById("miParrafo");
+	// miParrafo.textContent = graph;
 	// const image = Viz(graph, { format: "svg" });
 	// const graphDiv = document.getElementById("graph");
 	// Insertar la imagen SVG en el div
 	// graphDiv.innerHTML = image;
+	
 	return graph;
   }
 	
@@ -215,9 +219,32 @@ imprimir() {
 	this.imprimirNodo(nodo.derecho);
 	}
 	}
+	imprimirpos() {
+		this.imprimirNodoPostorden(this.raiz);
 	}
+	
+	imprimirNodoPostorden(nodo) {
+		if (nodo !== null) {
+			this.imprimirNodoPostorden(nodo.izquierdo);
+			this.imprimirNodoPostorden(nodo.derecho);
+			console.log("Post orden Carnet: " + nodo.valor + " - Nombre: " + nodo.nombre + " - Altura: " + nodo.altura + " - Contraseña: " + nodo.contraseña);
+		}
+	}
+	imprimirpre() {
+		this.imprimirNodoPreorden(this.raiz);
+	}
+	
+	imprimirNodoPreorden(nodo) {
+		if (nodo !== null) {
+			console.log("PreOrden Carnet: " + nodo.valor + " - Nombre: " + nodo.nombre + " - Altura: " + nodo.altura + " - Contraseña: " + nodo.contraseña);
+			this.imprimirNodoPreorden(nodo.izquierdo);
+			this.imprimirNodoPreorden(nodo.derecho);
+		}
+	}
+	}
+const arbolAVL = new AVL();
 function addprint(){
-	const arbolAVL = new AVL();
+	
 	
 	// Recorrer los datos de los alumnos y agregarlos al árbol AVL
 	for (var i = 0; i < alumnos.length; i++) {
@@ -236,11 +263,22 @@ arbolAVL.imprimir(); // Resultado esperado: 30, 20, 10, 25, 40, 50
 
 }
 
+function graficar_binario(){
+// console.log("PROBANDOOOOO"+graphText)
+arbolAVL.imprimirpos()
+arbolAVL.imprimirpre()
+d3.select("#"+"lienzo").graphviz()
+	.width(2000)
+	.height(3000)
+	.renderDot(graphText);
+
+}
+
 //////////////////////////
 // Evento para cargar el archivo al hacer clic en el botón correspondiente
 var loadFileBtn = document.getElementById('loadFileBtn');
 loadFileBtn.addEventListener('click', loadFile);
 var reload = document.getElementById('btnreload');
-reload.addEventListener('click', updateTable);
+reload.addEventListener('click', graficar_binario);
 var avlvar = document.getElementById('avlload');
 avlvar.addEventListener('click', addprint);

@@ -12,5 +12,26 @@
 			"password": "def456",
 			"Carpeta_raiz": "C:/Usuarios/María"
 		}
+		,
+		{
+			"nombre": "Mora",
+			"carnet": "123123123",
+			"password": "def456",
+			"Carpeta_raiz": "C:/Usuarios/Mora"
+		}
+		,
+		{
+			"nombre": "Bad Bunny",
+			"carnet": "123123",
+			"password": "def456",
+			"Carpeta_raiz": "C:/Usuarios/Benito"
+		}
+		,
+		{
+			"nombre": "Mariano Rac",
+			"carnet": "202101149",
+			"password": "def456",
+			"Carpeta_raiz": "C:/Usuarios/Marano"
+		}
 	]
 }
