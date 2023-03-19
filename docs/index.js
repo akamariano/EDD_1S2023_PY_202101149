@@ -1,4 +1,6 @@
 function checkLogin(event) {
+	imprimirArbolDesdeLocalStorage();
+	console.log(cargarArbolDesdeLocalStorage());
 	event.preventDefault();
 	
 	// Obtener los valores de entrada de usuario y contraseña

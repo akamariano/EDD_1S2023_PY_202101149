@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Bienvenido</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+		body {
+			background-image: url('https://eltutor.files.wordpress.com/2008/06/usacwalls-001-1600x1200.jpg');
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center center;
+			background-attachment: fixed;
+			font-family: 'Open Sans', sans-serif;
+			color: #333;
+			margin: 0;
+			padding: 0;
+		}
+    </style>
+</head>
+<body>
+	<div class="container my-5">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Bienvenido</h1>
+				<p>Seleccione una opción:</p>
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary">Botón 1</button>
+					<button type="button" class="btn btn-secondary">Botón 2</button>
+					<button type="button" class="btn btn-success">Botón 3</button>
+					<button type="button" class="btn btn-danger">Botón 4</button>
+				</div>
+				<hr>
+				<div class="card">
+					<div class="card-header">
+						<h5 class="mb-0">Carpetas</h5>
+					</div>
+					<div class="card-body">
+						<div class="form-group">
+							<label for="carpeta">Nombre de carpeta:</label>
+							<input type="text" class="form-control" id="carpeta" placeholder="Ingrese el nombre de la carpeta">
+						</div>
+						<button type="button" class="btn btn-primary">Crear carpeta</button>
+						<hr>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="card">
+									<div class="card-header">
+										<h6 class="mb-0">Carpeta 1</h6>
+									</div>
+									<div class="card-body">
+										<p>Aquí se pueden agregar archivos a la carpeta 1</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="card">
+									<div class="card-header">
+										<h6 class="mb-0">Carpeta 2</h6>
+									</div>
+									<div class="card-body">
+										<p>Aquí se pueden agregar archivos a la carpeta 2</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>
+	</div>
+</body>
+</html>
