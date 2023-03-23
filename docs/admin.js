@@ -253,6 +253,7 @@ arbolAVL.imprimir(); //
 graficar_binario();
 guardarArbolEnLocalStorage(arbolAVL);
 imprimirArbolDesdeLocalStorage();
+// iniciarSesion(12345,"abc123");
 }
 
 function graficar_binario(){
@@ -292,6 +293,13 @@ function guardarArbolEnLocalStorage(arbol) {
 	  return null;
 	}
 	var nodo = new NodoAVL(nodoObj.valor, nodoObj.nombre, nodoObj.contraseña);
+const lista = new ListaEnlazada()
+const carpetas1 = new ArbolIndexado();
+  carpetas1.agregarCarpeta("/raiz");
+  carpetas1.obtenerCarpeta("/raiz").agregarDocumento(0, 0, "Documento 1");
+  carpetas1.obtenerCarpeta("/raiz").agregarDocumento(1, 1, "Documento 2");
+  lista.agregar(nodoObj.valor, carpetas1);
+  lista.imprimir()
 	nodo.izquierdo = cargarNodoDesdeObj(nodoObj.izquierdo);
 	nodo.derecho = cargarNodoDesdeObj(nodoObj.derecho);
 	nodo.altura = nodoObj.altura;
@@ -370,7 +378,39 @@ function recorridosAVL() {
   postorden(arbolAVL.raiz);
   preorden(arbolAVL.raiz);
 }
-
+function iniciarSesion(carnet, contraseña) {
+	const arbol = cargarArbolDesdeLocalStorage();
+	const nodoEncontrado = buscarNodo(arbol.raiz, carnet);
+  
+	if (nodoEncontrado !== null && nodoEncontrado.contraseña === contraseña) {
+	  console.log("Inicio de sesión exitoso");
+	  window.location.assign("user.html");
+	  showAlert("Bienvenido "+carnet);
+	  window.miVariableGlobal = carnet;
+	//   mostrarTextoEnH2(carnet);
+	  
+	  return true
+	} else {
+	  console.log("Carnet o contraseña incorrectos");
+	  return false
+	}
+  }
+  
+  // Función auxiliar para buscar un nodo con un valor específico en el árbol AVL
+  function buscarNodo(nodo, valor) {
+	if (nodo === null) {
+	  return null;
+	}
+  
+	if (valor < nodo.valor) {
+	  return buscarNodo(nodo.izquierdo, valor);
+	} else if (valor > nodo.valor) {
+	  return buscarNodo(nodo.derecho, valor);
+	} else {
+	  return nodo;
+	}
+  }
+  
 //////////////////////////
 // Evento para cargar el archivo al hacer clic en el botón correspondiente
 var loadFileBtn = document.getElementById('loadFileBtn');

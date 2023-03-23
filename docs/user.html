@@ -27,12 +27,14 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<h1>Bienvenido</h1>
+				<h2 id="texto-bienvenida"></h2>
 				<p>Seleccione una opción:</p>
 				<div class="btn-group">
-					<button type="button" class="btn btn-primary">Botón 1</button>
-					<button type="button" class="btn btn-secondary">Botón 2</button>
-					<button type="button" class="btn btn-success">Botón 3</button>
-					<button type="button" class="btn btn-danger">Botón 4</button>
+					
+					<button type="button" id="btnrep" class="btn btn-primary">Reporte Carpetas</button>
+					<button type="button" id="btnrep2" class="btn btn-secondary">Reporte Archivos</button>
+
+					<button type="button" class="btn btn-danger">Cerrar Sesión</button>
 				</div>
 				<hr>
 				<div class="card">
@@ -40,11 +42,13 @@
 						<h5 class="mb-0">Carpetas</h5>
 					</div>
 					<div class="card-body">
+						
 						<div class="form-group">
-							<label for="carpeta">Nombre de carpeta:</label>
+							<label for="carpeta">Ruta:</label>
 							<input type="text" class="form-control" id="carpeta" placeholder="Ingrese el nombre de la carpeta">
 						</div>
 						<button type="button" class="btn btn-primary">Crear carpeta</button>
+						<button type="button" class="btn btn-primary">Eliminar carpeta</button>
 						<hr>
 						<div class="row">
 							<div class="col-sm-6">
@@ -73,5 +77,8 @@
 			</div>
 		</div>
 	</div>
+	<script src="admin.js"></script>
+	<script src="index.js"></script>
+	<script src="user.js"></script>
 </body>
 </html>
