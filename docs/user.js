@@ -134,4 +134,64 @@ class Nodo {
 //   // Crear un segundo nodo con datos de ejemplo
 //   const carnet2 = "20210002";
 // console.log(miVariableGlobal);
+class NodoCircular {
+  constructor(fechaHora) {
+    this.fechaHora = fechaHora;
+    this.siguiente = null;
+  }
+}
+
+class ListaCircular {
+  constructor() {
+    this.cabeza = null;
+    this.longitud = 0;
+  }
+
+  agregar(fechaHora) {
+    const nuevoNodo = new NodoCircular(fechaHora);
+
+    if (this.cabeza === null) {
+      this.cabeza = nuevoNodo;
+      this.cabeza.siguiente = this.cabeza;
+    } else {
+      let nodoActual = this.cabeza;
+
+      while (nodoActual.siguiente !== this.cabeza) {
+        nodoActual = nodoActual.siguiente;
+      }
+
+      nodoActual.siguiente = nuevoNodo;
+      nuevoNodo.siguiente = this.cabeza;
+    }
+
+    this.longitud++;
+  }
+
+  imprimir() {
+    if (this.cabeza === null) {
+      console.log("La lista está vacía.");
+      return;
+    }
+
+    let nodoActual = this.cabeza;
+    let i = 0;
+
+    do {
+      console.log(`Nodo ${i}: ${nodoActual.fechaHora}`);
+      nodoActual = nodoActual.siguiente;
+      i++;
+    } while (nodoActual !== this.cabeza);
+  }
+}
+
+// Crear una nueva lista circular
+// const listaCircular = new ListaCircular();
+
+// // Agregar la fecha y hora actual a la lista circular
+// const fechaHoraActual = new Date().toISOString();
+// listaCircular.agregar(fechaHoraActual);
+
+// // Imprimir la lista circular
+// listaCircular.imprimir();
+
 document.getElementById("btnrep").addEventListener("click", cargarArbolDesdeLocalStorage());
