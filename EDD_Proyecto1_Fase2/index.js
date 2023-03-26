@@ -1,4 +1,6 @@
 function checkLogin(event) {
+	imprimirArbolDesdeLocalStorage();
+	console.log(cargarArbolDesdeLocalStorage());
 	event.preventDefault();
 	
 	// Obtener los valores de entrada de usuario y contraseña
@@ -11,7 +13,9 @@ function checkLogin(event) {
 		window.location.replace("admin.html");
 	} else {
 		// Mostrar un mensaje de error
-		document.getElementById("errorMessage").style.display = "block";
+		iniciarSesion(username,password);
+		
+		
 	}
 }
 

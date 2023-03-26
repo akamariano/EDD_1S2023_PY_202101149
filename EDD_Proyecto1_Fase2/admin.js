@@ -244,23 +244,16 @@ imprimir() {
 	}
 const arbolAVL = new AVL();
 function addprint(){
-	
-	
 	// Recorrer los datos de los alumnos y agregarlos al árbol AVL
 	for (var i = 0; i < alumnos.length; i++) {
 		arbolAVL.insertar(alumnos[i].carnet,alumnos[i].nombre,alumnos[i].password);
 	}
-	
-	
-// arbolAVL.insertar(10);
-// arbolAVL.insertar(20);
-// arbolAVL.insertar(30);
-// arbolAVL.insertar(40);
-// arbolAVL.insertar(50);
-// arbolAVL.insertar(25);
 
-arbolAVL.imprimir(); // Resultado esperado: 30, 20, 10, 25, 40, 50
-
+arbolAVL.imprimir(); // 
+graficar_binario();
+guardarArbolEnLocalStorage(arbolAVL);
+imprimirArbolDesdeLocalStorage();
+// iniciarSesion(12345,"abc123");
 }
 
 function graficar_binario(){
@@ -268,17 +261,164 @@ function graficar_binario(){
 arbolAVL.imprimirpos()
 arbolAVL.imprimirpre()
 d3.select("#"+"lienzo").graphviz()
-	.width(2000)
-	.height(3000)
+	.width(3000)
+	.height(1000)
 	.renderDot(graphText);
 
 }
+// Función para guardar el árbol AVL en LocalStorage
+function guardarArbolEnLocalStorage(arbol) {
+	// Convertir el árbol a una cadena de texto JSON
+	var arbolJson = JSON.stringify(arbol);
+	// Almacenar la cadena en LocalStorage
+	localStorage.setItem("arbolAVL", arbolJson);
+  }
 
+  function cargarArbolDesdeLocalStorage() {
+	// Obtener la cadena de texto JSON del árbol almacenada en LocalStorage
+	var arbolJson = localStorage.getItem("arbolAVL");
+	// Si no hay ninguna cadena almacenada, retornar un árbol vacío
+	if (!arbolJson) {
+	  return new AVL();
+	}
+	// Convertir la cadena de texto JSON a un objeto JavaScript
+	var arbolObj = JSON.parse(arbolJson);
+	// Crear un nuevo árbol AVL con los datos cargados desde LocalStorage
+	var arbol = new AVL();
+	arbol.raiz = cargarNodoDesdeObj(arbolObj.raiz);
+	return arbol;
+  }
+  function cargarNodoDesdeObj(nodoObj) {
+	if (nodoObj === null) {
+	  return null;
+	}
+	var nodo = new NodoAVL(nodoObj.valor, nodoObj.nombre, nodoObj.contraseña);
+const lista = new ListaEnlazada()
+const carpetas1 = new ArbolIndexado();
+  carpetas1.agregarCarpeta("/raiz");
+  carpetas1.obtenerCarpeta("/raiz").agregarDocumento(0, 0, "Documento 1");
+  carpetas1.obtenerCarpeta("/raiz").agregarDocumento(1, 1, "Documento 2");
+  lista.agregar(nodoObj.valor, carpetas1);
+  lista.imprimir()
+	nodo.izquierdo = cargarNodoDesdeObj(nodoObj.izquierdo);
+	nodo.derecho = cargarNodoDesdeObj(nodoObj.derecho);
+	nodo.altura = nodoObj.altura;
+	return nodo;
+  }
+  function imprimirArbolDesdeLocalStorage() {
+	// Cargar el árbol AVL desde LocalStorage
+	var arbol = cargarArbolDesdeLocalStorage();
+	// Recorrer el árbol en orden y mostrar sus valores
+	recorrerEnOrden(arbol.raiz);
+  }
+  
+  // Función auxiliar para recorrer el árbol en orden
+  function recorrerEnOrden(nodo) {
+	if (nodo !== null) {
+	  recorrerEnOrden(nodo.izquierdo);
+	  console.log("Imprimiendo desde local storage:"+nodo.valor, nodo.nombre, nodo.contraseña);
+	  recorrerEnOrden(nodo.derecho);
+	}
+  }
+//////////////////////////
+function recorridosAVL() {
+  const tableIn = document.getElementById('dataTableIn').getElementsByTagName('tbody')[0];
+  const tablePost = document.getElementById('dataTablePost').getElementsByTagName('tbody')[0];
+  const tablePre = document.getElementById('dataTablePre').getElementsByTagName('tbody')[0];
+
+  function inorden(nodo) {
+    if (nodo !== null) {
+      inorden(nodo.izquierdo);
+      const row = tableIn.insertRow();
+      const carnetCell = row.insertCell();
+      const nombreCell = row.insertCell();
+      const passCell = row.insertCell();
+      carnetCell.innerHTML = nodo.valor;
+      nombreCell.innerHTML = nodo.nombre;
+      passCell.innerHTML = nodo.contraseña;
+      inorden(nodo.derecho);
+    }
+  }
+
+  function postorden(nodo) {
+    if (nodo !== null) {
+      postorden(nodo.izquierdo);
+      postorden(nodo.derecho);
+      const row = tablePost.insertRow();
+      const carnetCell = row.insertCell();
+      const nombreCell = row.insertCell();
+      const passCell = row.insertCell();
+      carnetCell.innerHTML = nodo.valor;
+      nombreCell.innerHTML = nodo.nombre;
+      passCell.innerHTML = nodo.contraseña;
+    }
+  }
+
+  function preorden(nodo) {
+    if (nodo !== null) {
+      const row = tablePre.insertRow();
+      const carnetCell = row.insertCell();
+      const nombreCell = row.insertCell();
+      const passCell = row.insertCell();
+      carnetCell.innerHTML = nodo.valor;
+      nombreCell.innerHTML = nodo.nombre;
+      passCell.innerHTML = nodo.contraseña;
+      preorden(nodo.izquierdo);
+      preorden(nodo.derecho);
+    }
+  }
+
+  // Limpiar las tablas antes de agregar nuevos elementos
+  tableIn.innerHTML = '';
+  tablePost.innerHTML = '';
+  tablePre.innerHTML = '';
+
+  // Realizar los recorridos y agregar los nodos a las tablas correspondientes
+  inorden(arbolAVL.raiz);
+  postorden(arbolAVL.raiz);
+  preorden(arbolAVL.raiz);
+}
+function iniciarSesion(carnet, contraseña) {
+	const arbol = cargarArbolDesdeLocalStorage();
+	const nodoEncontrado = buscarNodo(arbol.raiz, carnet);
+  
+	if (nodoEncontrado !== null && nodoEncontrado.contraseña === contraseña) {
+	  console.log("Inicio de sesión exitoso");
+	  window.location.assign("user.html");
+	  showAlert("Bienvenido "+carnet);
+	  window.miVariableGlobal = carnet;
+	//   mostrarTextoEnH2(carnet);
+	  
+	  return true
+	} else {
+	  console.log("Carnet o contraseña incorrectos");
+	  return false
+	}
+  }
+  
+  // Función auxiliar para buscar un nodo con un valor específico en el árbol AVL
+  function buscarNodo(nodo, valor) {
+	if (nodo === null) {
+	  return null;
+	}
+  
+	if (valor < nodo.valor) {
+	  return buscarNodo(nodo.izquierdo, valor);
+	} else if (valor > nodo.valor) {
+	  return buscarNodo(nodo.derecho, valor);
+	} else {
+	  return nodo;
+	}
+  }
+  
 //////////////////////////
 // Evento para cargar el archivo al hacer clic en el botón correspondiente
 var loadFileBtn = document.getElementById('loadFileBtn');
 loadFileBtn.addEventListener('click', loadFile);
 var reload = document.getElementById('btnreload');
-reload.addEventListener('click', graficar_binario);
+reload.addEventListener('click', recorridosAVL);
 var avlvar = document.getElementById('avlload');
 avlvar.addEventListener('click', addprint);
+document.getElementById("btnLogout").addEventListener("click", function() {
+  window.location.href = "index.html";
+});
