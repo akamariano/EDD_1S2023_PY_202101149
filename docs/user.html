@@ -1,84 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Bienvenido</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <style>
-		body {
-			background-image: url('https://eltutor.files.wordpress.com/2008/06/usacwalls-001-1600x1200.jpg');
-			background-size: cover;
-			background-repeat: no-repeat;
-			background-position: center center;
-			background-attachment: fixed;
-			font-family: 'Open Sans', sans-serif;
-			color: #333;
-			margin: 0;
-			padding: 0;
-		}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+	<style>
+        body {
+          background-image: url('https://eltutor.files.wordpress.com/2008/06/usacwalls-001-1600x1200.jpg');
+        }
     </style>
 </head>
 <body>
-	<div class="container my-5">
-		<div class="row">
-			<div class="col-sm-12">
-				<h1>Bienvenido</h1>
-				<h2 id="texto-bienvenida"></h2>
-				<p>Seleccione una opción:</p>
-				<div class="btn-group">
-					
-					<button type="button" id="btnrep" class="btn btn-primary">Reporte Carpetas</button>
-					<button type="button" id="btnrep2" class="btn btn-secondary">Reporte Archivos</button>
-
-					<button type="button" class="btn btn-danger">Cerrar Sesión</button>
-				</div>
-				<hr>
-				<div class="card">
-					<div class="card-header">
-						<h5 class="mb-0">Carpetas</h5>
-					</div>
-					<div class="card-body">
-						
-						<div class="form-group">
-							<label for="carpeta">Ruta:</label>
-							<input type="text" class="form-control" id="carpeta" placeholder="Ingrese el nombre de la carpeta">
-						</div>
-						<button type="button" class="btn btn-primary">Crear carpeta</button>
-						<button type="button" class="btn btn-primary">Eliminar carpeta</button>
-						<hr>
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="card">
-									<div class="card-header">
-										<h6 class="mb-0">Carpeta 1</h6>
-									</div>
-									<div class="card-body">
-										<p>Aquí se pueden agregar archivos a la carpeta 1</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="card">
-									<div class="card-header">
-										<h6 class="mb-0">Carpeta 2</h6>
-									</div>
-									<div class="card-body">
-										<p>Aquí se pueden agregar archivos a la carpeta 2</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>				
-			</div>
-		</div>
-	</div>
+	
+    <nav class="navbar navbar-dark bg-primary" style="background-color: #265f70;">
+        <div class="container-fluid">
+            <a class="navbar-brand"  href="#">Bienvenido usuario</a>
+        </div>
+		<button id="btnLogout" type="button" class="btn btn-secondary">Cerrar sesión</button>
+    </nav>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="mb-4">Bienvenido</h2>
+                
+                <div class="input-group mb-3">
+                    <input type="text" id="ruta" class="form-control" placeholder="Ej. /" aria-label="Ruta de la carpeta">
+                    <input type="text" id="carpeta" class="form-control" placeholder="Ej. Carpeta1" aria-label="Nombre de la carpeta">
+                    <button class="btn btn-outline-secondary" style="background-color: #228b4e; color: azure;" type="button" onclick="agregarVarios()">Agregar Carpeta</button>
+                    <button class="btn btn-outline-secondary" style="background-color:  #228b4e; color: azure;" type="button" onclick="mostraCarpetas()">Mostrar Carpetas</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img id="image" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="user.js"></script>
 	<script src="admin.js"></script>
-	<script src="index.js"></script>
-	<script src="user.js"></script>
 </body>
 </html>
