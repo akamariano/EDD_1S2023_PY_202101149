@@ -1,197 +1,402 @@
 user=""
 nuser=""
+let globalCarnet = "";
+function setCarnetAndDisplay(carnet) {
+  guardarCarnet(carnet);
+  globalCarnet = carnet;
+  console.log("DESDE USER"+globalCarnet);
+}
+function guardarCarnet(carnet1){
+console.log("carnet1"+carnet1);
+globalCarnet = carnet1;
+console.log("GLOBAL DESDE FUNCT"+globalCarnet);
+return carnet1
+}
 function showAlert(message) {
     alert(message);
     user=message
-    console.log(miVariableGlobal)
+    
   }
   function mostrarTextoEnH2(texto) {
     const elementoH2 = document.getElementById("texto-bienvenida");
     elementoH2.innerText = texto;
     nuser=texto;
   }
-// Clase que representa un nodo de la lista enlazada
-class Nodo {
-    constructor(carnet, carpetas) {
-      this.carnet = carnet;
-      this.carpetas = carpetas;
+  class nodoArbol{
+    constructor(valor, id){
+        this.siguiente = null;
+        this.valor = valor;
+        this.primero = null;
+        this.id = id;
+    }
+}
+
+class ArbolNArio{
+    constructor(){
+        this.raiz = new nodoArbol("/", 0)
+        this.nodo_creados = 1;
+    }
+
+    BuscarCarpeta(carpeta_nueva, lista_carpeta){
+        //Si la nueva carpeta se creara en la raiz, se buscara si existe o no
+        if(lista_carpeta[1] === "" && this.raiz.primero !== null){
+            let aux = this.raiz.primero
+            while(aux){
+                if(aux.valor === carpeta_nueva){
+                    return 1
+                }
+                aux = aux.siguiente
+            }
+            return 2
+        }
+        //Si la nueva carpeta se creara en la raiz pero no existe ninguna carpeta
+        else if (lista_carpeta[1] === "" && this.raiz.primero === null){
+            return 5
+        }
+        //Si la nueva carpeta se creara en algun directorio pero la raiz no posee ninguna carpeta
+        else if(lista_carpeta[1] !== "" && this.raiz.primero === null){
+            return 3
+        }
+        //Buscamos el directorio padre y revisar si en sus hijos existe la carpeta
+        else if(lista_carpeta[1] !== "" && this.raiz.primero !== null){
+            let aux = this.raiz.primero
+            let nivel = lista_carpeta.length
+            let posicion = 1; 
+            for(var i = 1; i < nivel; i++){
+                if(aux !== null){
+                    while(aux){
+                        if(posicion < lista_carpeta.length && lista_carpeta[posicion] === aux.valor){
+                            posicion++
+                            if(aux.primero !== null && posicion < lista_carpeta.length){
+                                aux = aux.primero
+                            }
+                            break;
+                        }else{
+                            aux = aux.siguiente
+                        }
+                    }
+                }else{
+                    break;
+                }
+            }
+            if(aux !== null){
+                aux = aux.primero
+                while(aux){
+                    if(aux.valor === carpeta_nueva){
+                        return 1
+                    }
+                    aux = aux.siguiente
+                }
+                return 2
+            }else{
+                return 4
+            }
+
+        }
+    }
+    //Funcion solo para ordenar la lista de hijos cuando el padre posee varios hijos
+    insertarOrdenado(raiz, nuevoNodo){
+        let piv = raiz.primero
+        if(nuevoNodo.valor < raiz.primero.valor){
+            nuevoNodo.siguiente = raiz.primero
+            raiz.primero = nuevoNodo
+            return raiz
+        }else{
+            while(piv.siguiente){
+                if( nuevoNodo.valor > piv.valor && nuevoNodo.valor < piv.siguiente.valor){
+                    nuevoNodo.siguiente = piv.siguiente
+                    piv.siguiente = nuevoNodo
+                    return raiz
+                }else if(nuevoNodo.valor < piv.valor){
+                    nuevoNodo.siguiente = piv
+                    piv =  nuevoNodo
+                    return raiz
+                }else{
+                    piv = piv.siguiente
+                }
+            }
+            piv.siguiente = nuevoNodo
+            return raiz
+        }
+    }
+    // /usac/prueba -> prueba1 /usac/prueba(prueba1)
+    insertarHijos(carpeta_nueva, lista_carpeta){
+        /**
+         * creamos el nuevo nodo y aumentamos la cantidad de nodos creados
+         */
+        const nuevoNodo = new nodoArbol(carpeta_nueva, this.nodo_creados)
+        this.nodo_creados++
+        //Corroboramos si la insercion es en la raiz y si la raiz no tiene ninguna carpeta
+        if(lista_carpeta[1] === "" && this.raiz.primero === null){
+            this.raiz.primero = nuevoNodo
+        }
+        //Corroboramos si la insercion es en la raiz y pero la raiz ya tiene carpetas
+        else if(lista_carpeta[1] === "" && this.raiz.primero !== null){
+            this.raiz = this.insertarOrdenado(this.raiz, nuevoNodo)
+        }
+        //Corroboramos si la insercion es en algun directorio que no es la raiz
+        else if(lista_carpeta[1] !== "" && this.raiz.primero !== null){
+            let aux = this.raiz.primero
+            let nivel = lista_carpeta.length
+            let posicion = 1; 
+            //Recorremos hasta llegar a la profundidad maxima donde se quiere insertar la nueva carpeta
+            for(var i = 1; i < nivel; i++){
+                if(aux !== null){
+                    while(aux){
+                        //Comparamos si las posiciones de la lista de carpetas es igual a la del nodo actual sino seguimos buscando
+                        if(posicion < lista_carpeta.length && lista_carpeta[posicion] === aux.valor){ 
+                            posicion++
+                            //Esta comparacion es para asegurarnos que nos quedaremos en el nodo padre
+                            if(aux.primero !== null && posicion < lista_carpeta.length){
+                                aux = aux.primero
+                            }
+                            break;
+                        }else{
+                            aux = aux.siguiente
+                        }
+                    }
+                }else{
+                    break;
+                }
+            }
+            //Si la carpeta padre ya tiene carpetas se agrega en el primero sino se manda a insertar en el orden correcto
+            if(aux.primero === null){
+                aux.primero = nuevoNodo
+            }else{
+                aux = this.insertarOrdenado(aux, nuevoNodo)
+            }
+        }
+    }
+    /**
+     * 1 - Carpeta ya existe
+     * 2 - la carpeta no existe
+     * 3 - El directorio no es correcto o no es valido
+     * 4 - Directorio no valido
+     * 5 - No existe ninguna carpeta en la raiz
+     * 
+     */
+    insertarValor(ruta, carpeta_nueva){
+        let lista_carpeta = ruta.split('/')
+        let existe_carpeta = this.BuscarCarpeta(carpeta_nueva, lista_carpeta)
+        switch(existe_carpeta){
+            case 1:
+                alert("La carpeta ya existe")
+                break;
+            case 2:
+                this.insertarHijos(carpeta_nueva, lista_carpeta)
+                break;
+            case 3:
+                alert("La ruta actual no existe")
+                break;
+            case 4:
+                alert("La ruta actual no es valida")
+                break;
+            case 5:
+                this.insertarHijos(carpeta_nueva, lista_carpeta)
+                break;
+        }
+    }
+
+    grafica_arbol(){
+        var cadena = "";
+        if(!(this.raiz === null)){
+            cadena = "digraph arbol{ ";
+            cadena = cadena + this.retornarValoresArbol(this.raiz);
+            cadena = cadena + "}";
+        }else{
+            cadena = "digraph G { arbol }";
+        }
+        return cadena;
+    }
+
+    /** le mando el parametro primero y solo recorre los siguientes*/
+    retornarValoresArbol(raiz){
+        var cadena = "node[shape=record] ";
+        let nodo = 1;
+        let nodo_padre = 0;
+        cadena += "nodo" + nodo_padre + "[label=\"" + this.raiz.valor  + "\"] "
+        cadena += this.valoresSiguietes(this.raiz.primero, nodo, nodo_padre)
+        cadena += this.conexionRamas(this.raiz.primero, 0)
+        return cadena;
+    }
+
+
+    valoresSiguietes(raiz, nodo, nodo_padre){
+        let cadena = ""
+        let aux = raiz
+        let nodo_padre_aumento = nodo_padre
+        if(aux !== null){
+            while(aux){
+                cadena += "nodo" + aux.id + "[label=\"" + aux.valor  + "\"] "
+                aux = aux.siguiente
+            }
+            aux = raiz
+            while(aux){
+                nodo_padre_aumento++
+                cadena += this.valoresSiguietes(aux.primero, this.nodo_creados, nodo_padre_aumento)
+                aux = aux.siguiente
+            }
+        }
+        return cadena
+    }
+
+    conexionRamas(raiz, padre){
+        let cadena = ""
+        let aux = raiz
+        if(aux !== null){
+            while(aux){
+                cadena += "nodo" + padre + " -> nodo" + aux.id + " "
+                aux = aux.siguiente
+            }
+            aux = raiz
+            while(aux){
+                cadena += this.conexionRamas(aux.primero, aux.id)
+                aux = aux.siguiente
+            }
+        }
+        return cadena
+    }
+
+    /** Modificacion 30/03/2023 */
+    BuscarCarpetaV2(lista_carpeta){
+        //Directorio Actual seria la Raiz
+        if(lista_carpeta[1] === "" && this.raiz.primero !== null){
+            return this.raiz
+        }
+        //Directorio Actual seria Raiz pero no contiene elementos
+        else if (lista_carpeta[1] === "" && this.raiz.primero === null){
+            return null
+        }
+        //Actual no es raiz pero tampoco hay elementos en raiz
+        else if(lista_carpeta[1] !== "" && this.raiz.primero === null){
+            return null
+        }
+        //Buscamos el directorio padre y revisar si en sus hijos existe la carpeta
+        else if(lista_carpeta[1] !== "" && this.raiz.primero !== null){
+            let aux = this.raiz.primero
+            let nivel = lista_carpeta.length
+            let posicion = 1; 
+            for(var i = 1; i < nivel; i++){
+                if(aux !== null){
+                    while(aux){
+                        if(posicion < lista_carpeta.length && lista_carpeta[posicion] === aux.valor){
+                            posicion++
+                            if(aux.primero !== null && posicion < lista_carpeta.length){
+                                aux = aux.primero
+                            }
+                            break;
+                        }else{
+                            aux = aux.siguiente
+                        }
+                    }
+                }else{
+                    break;
+                }
+            }
+            if(aux !== null){
+                return aux
+            }else{
+                return null
+            }
+
+        }
+    }
+
+    mostrarCarpetasActuales(ruta){
+        let lista_carpeta = ruta.split('/')
+        let existe_carpeta = this.BuscarCarpetaV2(lista_carpeta)
+        try{
+            if(existe_carpeta !== null){
+                let aux = existe_carpeta.primero
+                while(aux){
+                    console.log(aux.valor)
+                    aux = aux.siguiente
+                }
+            }
+        }catch(error){
+            console.log("Hubo un error")
+        }
+    }
+}
+
+ arbolnario = new ArbolNArio()
+
+function agregarVarios(){
+    arbolnario= cargarArbolNADesdeLocalStorage();
+    let ruta = document.getElementById("ruta").value
+    let carpeta = document.getElementById("carpeta").value
+    try{
+        arbolnario.insertarValor(ruta,carpeta)
+    }catch(error){
+        alert("Hubo un error al insertar el nodo")
+    }
+    document.getElementById("carpeta").value = "";
+    refrescarArbol();  
+   guardarArbolNAEnLocalStorage(arbolnario);
+   actualizarNodo(getcurrentuserid(), arbolnario);
+
+}
+class NodoCircular {
+    constructor(fechaHora) {
+      this.fechaHora = fechaHora;
       this.siguiente = null;
     }
   }
   
-  // Clase que representa la lista enlazada
-  class ListaEnlazada {
+  class ListaCircular {
     constructor() {
       this.cabeza = null;
       this.longitud = 0;
     }
-    imprimir() {
-        let nodoActual = this.cabeza;
-    
-        while (nodoActual !== null) {
-          console.log(`Carnet: ${nodoActual.carnet}`);
-          console.log("Carpetas:");
-          console.log(nodoActual.carpetas);
-          console.log("----------------------");
-    
-          nodoActual = nodoActual.siguiente;
-        }
-      }
   
-    // Agrega un nuevo nodo al final de la lista
-    agregar(carnet, carpetas) {
-      const nuevoNodo = new Nodo(carnet, carpetas);
+    agregar(fechaHora) {
+      const nuevoNodo = new NodoCircular(fechaHora);
   
       if (this.cabeza === null) {
         this.cabeza = nuevoNodo;
+        this.cabeza.siguiente = this.cabeza;
       } else {
         let nodoActual = this.cabeza;
   
-        while (nodoActual.siguiente !== null) {
+        while (nodoActual.siguiente !== this.cabeza) {
           nodoActual = nodoActual.siguiente;
         }
   
         nodoActual.siguiente = nuevoNodo;
+        nuevoNodo.siguiente = this.cabeza;
       }
   
       this.longitud++;
     }
   
-    // Devuelve el nodo en la posición indicada (0-indexado)
-    obtener(posicion) {
-      if (posicion < 0 || posicion >= this.longitud) {
-        return null;
+    imprimir() {
+      if (this.cabeza === null) {
+        console.log("La lista está vacía.");
+        return;
       }
   
       let nodoActual = this.cabeza;
-      let indiceActual = 0;
+      let i = 0;
   
-      while (indiceActual < posicion) {
+      do {
+        console.log(`Nodo ${i}: ${nodoActual.fechaHora}`);
         nodoActual = nodoActual.siguiente;
-        indiceActual++;
-      }
-  
-      return nodoActual;
+        i++;
+      } while (nodoActual !== this.cabeza);
     }
   }
-  
-  // Clase que representa un árbol indexado de carpetas
-  class ArbolIndexado {
-    constructor() {
-      this.carpetas = new Map();
-    }
-  
-    // Agrega una nueva carpeta con el nombre indicado
-    agregarCarpeta(nombreCarpeta) {
-      this.carpetas.set(nombreCarpeta, new MatrizDispersa());
-    }
-  
-    // Devuelve la carpeta con el nombre indicado, o null si no existe
-    obtenerCarpeta(nombreCarpeta) {
-      return this.carpetas.get(nombreCarpeta) || null;
-    }
-  }
-  
-  // Clase que representa una matriz dispersa de documentos
-  class MatrizDispersa {
-    constructor() {
-      this.filas = new Map();
-    }
-  
-    // Agrega un nuevo documento en la fila y columna indicadas
-    agregarDocumento(fila, columna, documento) {
-      if (!this.filas.has(fila)) {
-        this.filas.set(fila, new Map());
-      }
-  
-      this.filas.get(fila).set(columna, documento);
-    }
-  
-    // Devuelve el documento en la fila y columna indicadas, o null si no existe
-    obtenerDocumento(fila, columna) {
-      const filaActual = this.filas.get(fila);
-  
-      return filaActual ? filaActual.get(columna) || null : null;
-    }
-  }
-  
-  
-  // Función auxiliar para recorrer el árbol en orden
-//   const lista = new ListaEnlazada();
- 
-  
-  // Crear una nueva lista enlazada
-
-  
-  // Crear un primer nodo con datos de ejemplo
-//   const carnet1 = "20210001";
-//   const carpetas1 = new ArbolIndexado();
-//   carpetas1.agregarCarpeta("Documentos");
-//   carpetas1.obtenerCarpeta("Documentos").agregarDocumento(0, 0, "Documento 1");
-//   carpetas1.obtenerCarpeta("Documentos").agregarDocumento(1, 1, "Documento 2");
-//   lista.agregar(carnet1, carpetas1);
-  
-//   // Crear un segundo nodo con datos de ejemplo
-//   const carnet2 = "20210002";
-// console.log(miVariableGlobal);
-class NodoCircular {
-  constructor(fechaHora) {
-    this.fechaHora = fechaHora;
-    this.siguiente = null;
-  }
+function refrescarArbol(){
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = arbolnario.grafica_arbol();
+    $("#image").attr("src", url + body);
+    document.getElementById("carpeta").value = "";
 }
 
-class ListaCircular {
-  constructor() {
-    this.cabeza = null;
-    this.longitud = 0;
-  }
-
-  agregar(fechaHora) {
-    const nuevoNodo = new NodoCircular(fechaHora);
-
-    if (this.cabeza === null) {
-      this.cabeza = nuevoNodo;
-      this.cabeza.siguiente = this.cabeza;
-    } else {
-      let nodoActual = this.cabeza;
-
-      while (nodoActual.siguiente !== this.cabeza) {
-        nodoActual = nodoActual.siguiente;
-      }
-
-      nodoActual.siguiente = nuevoNodo;
-      nuevoNodo.siguiente = this.cabeza;
-    }
-
-    this.longitud++;
-  }
-
-  imprimir() {
-    if (this.cabeza === null) {
-      console.log("La lista está vacía.");
-      return;
-    }
-
-    let nodoActual = this.cabeza;
-    let i = 0;
-
-    do {
-      console.log(`Nodo ${i}: ${nodoActual.fechaHora}`);
-      nodoActual = nodoActual.siguiente;
-      i++;
-    } while (nodoActual !== this.cabeza);
-  }
+function mostraCarpetas(){
+    let ruta = document.getElementById("ruta").value
+    arbolnario.mostrarCarpetasActuales(ruta)
 }
 
-// Crear una nueva lista circular
-// const listaCircular = new ListaCircular();
-
-// // Agregar la fecha y hora actual a la lista circular
-// const fechaHoraActual = new Date().toISOString();
-// listaCircular.agregar(fechaHoraActual);
-
-// // Imprimir la lista circular
-// listaCircular.imprimir();
-
-document.getElementById("btnrep").addEventListener("click", cargarArbolDesdeLocalStorage());
+document.getElementById("btnLogout").addEventListener("click", function() {
+    window.location.href = "index.html";
+  });

@@ -43,10 +43,11 @@ function loadFile() {
 
 //////////////////////////
 class NodoAVL {
-	constructor(valor,nombre, contraseña) {
+	constructor(valor,nombre, contraseña,nario) {
 	  this.valor = valor;
 	  this.nombre = nombre;
 	  this.contraseña = contraseña;
+	  this.nario=nario;
 	  this.izquierdo = null;
 	  this.derecho = null;
 	  this.altura = 1;
@@ -83,11 +84,12 @@ class NodoAVL {
 	  nodoDerecho.nombre = nodo.nombre;
 	  nodoDerecho.valor = nodo.valor;
 	  nodoDerecho.contraseña = nodo.contraseña;
+	  nodoDerecho.nario = nodo.nario;
   
 	  nodo.nombre = nodoIzquierdoSubArbolDerecho.nombre;
 	  nodo.valor = nodoIzquierdoSubArbolDerecho.valor;
 	  nodo.contraseña = nodoIzquierdoSubArbolDerecho.contraseña;
-  
+	  nodo.nario=nodoIzquierdoSubArbolDerecho.narioM
 	  nodo.derecho = nodoIzquierdoSubArbolDerecho;
   
 	  nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
@@ -104,11 +106,11 @@ class NodoAVL {
 	  nodoIzquierdo.nombre = nodo.nombre;
 	  nodoIzquierdo.valor = nodo.valor;
 	  nodoIzquierdo.contraseña = nodo.contraseña;
-  
+	  nodoIzquierdo.nario=nodo.nario;
 	  nodo.nombre = nodoDerechoSubArbolIzquierdo.nombre;
 	  nodo.valor = nodoDerechoSubArbolIzquierdo.valor;
 	  nodo.contraseña = nodoDerechoSubArbolIzquierdo.contraseña;
-  
+	  nodo.nario= nodoDerechoSubArbolIzquierdo.nario;
 	  nodo.izquierdo = nodoDerechoSubArbolIzquierdo;
   
 	  nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
@@ -118,24 +120,25 @@ class NodoAVL {
 	}
   
 	// Función para insertar un nodo en el árbol AVL
-	insertar(valor,nombre,contraseña) {
-	  this.raiz = this.insertarNodo(this.raiz, valor,nombre,contraseña);
+	insertar(valor,nombre,contraseña,nario) {
+	  this.raiz = this.insertarNodo(this.raiz, valor,nombre,contraseña,nario);
 	}
   
-	insertarNodo(nodo, valor,nombre,contraseña) {
+	insertarNodo(nodo, valor,nombre,contraseña,nario) {
 	  // Si el nodo es nulo, lo creamos con el valor dado
 	  if (nodo === null) {
-		return new NodoAVL(valor,nombre,contraseña);
+		
+		return new NodoAVL(valor,nombre,contraseña,nario);
 	  }
   
 	  // Si el valor es menor que el valor del nodo actual, insertamos en el subárbol izquierdo
 	  if (valor < nodo.valor) {
-		nodo.izquierdo = this.insertarNodo(nodo.izquierdo, valor,nombre,contraseña);
+		nodo.izquierdo = this.insertarNodo(nodo.izquierdo, valor,nombre,contraseña,nario);
 	  }
   
 	  // Si el valor es mayor que el valor del nodo actual, insertamos en el subárbol derecho
 	  else if (valor > nodo.valor) {
-		nodo.derecho = this.insertarNodo(nodo.derecho, valor,nombre,contraseña);
+		nodo.derecho = this.insertarNodo(nodo.derecho, valor,nombre,contraseña,nario);
 	  }
   
 	  // Si el valor es igual al valor del nodo actual, no hacemos nada
@@ -214,7 +217,7 @@ imprimir() {
 	
 	imprimirNodo(nodo) {
 	if (nodo !== null) {
-	console.log("Carnet: " + nodo.valor + " - Nombre: " + nodo.nombre + " - Altura: " + nodo.altura+" - Contraseña: " + nodo.contraseña);
+	console.log("Carnet: " + nodo.valor + " - Nombre: " + nodo.nombre + " - Altura: " + nodo.altura+" - Contraseña: " + nodo.contraseña+"NARIO:"+nodo.nario);
 	this.imprimirNodo(nodo.izquierdo);
 	this.imprimirNodo(nodo.derecho);
 	}
@@ -246,24 +249,28 @@ const arbolAVL = new AVL();
 function addprint(){
 	// Recorrer los datos de los alumnos y agregarlos al árbol AVL
 	for (var i = 0; i < alumnos.length; i++) {
-		arbolAVL.insertar(alumnos[i].carnet,alumnos[i].nombre,alumnos[i].password);
+		arbolnario1 = new ArbolNArio();
+		console.log(arbolnario1)
+		arbolAVL.insertar(alumnos[i].carnet,alumnos[i].nombre,alumnos[i].password,arbolnario1);
 	}
 
 arbolAVL.imprimir(); // 
 graficar_binario();
 guardarArbolEnLocalStorage(arbolAVL);
 imprimirArbolDesdeLocalStorage();
+
 // iniciarSesion(12345,"abc123");
 }
 
 function graficar_binario(){
 // console.log("PROBANDOOOOO"+graphText)
-arbolAVL.imprimirpos()
-arbolAVL.imprimirpre()
+// arbolAVL.imprimirpos()
+// arbolAVL.imprimirpre()
 d3.select("#"+"lienzo").graphviz()
 	.width(3000)
 	.height(1000)
 	.renderDot(graphText);
+	console.log("ALUM"+alumnos.nario);
 
 }
 // Función para guardar el árbol AVL en LocalStorage
@@ -292,14 +299,8 @@ function guardarArbolEnLocalStorage(arbol) {
 	if (nodoObj === null) {
 	  return null;
 	}
-	var nodo = new NodoAVL(nodoObj.valor, nodoObj.nombre, nodoObj.contraseña);
-const lista = new ListaEnlazada()
-const carpetas1 = new ArbolIndexado();
-  carpetas1.agregarCarpeta("/raiz");
-  carpetas1.obtenerCarpeta("/raiz").agregarDocumento(0, 0, "Documento 1");
-  carpetas1.obtenerCarpeta("/raiz").agregarDocumento(1, 1, "Documento 2");
-  lista.agregar(nodoObj.valor, carpetas1);
-  lista.imprimir()
+	var nodo = new NodoAVL(nodoObj.valor, nodoObj.nombre, nodoObj.contraseña,nodoObj.nario);
+
 	nodo.izquierdo = cargarNodoDesdeObj(nodoObj.izquierdo);
 	nodo.derecho = cargarNodoDesdeObj(nodoObj.derecho);
 	nodo.altura = nodoObj.altura;
@@ -311,7 +312,40 @@ const carpetas1 = new ArbolIndexado();
 	// Recorrer el árbol en orden y mostrar sus valores
 	recorrerEnOrden(arbol.raiz);
   }
+  function avlToArray(nodo, array) {
+	if (nodo !== null) {
+	  avlToArray(nodo.izquierdo, array);
+	  array.push({
+		carnet: nodo.valor,
+		nombre: nodo.nombre,
+		password: nodo.contraseña,
+		nario: nodo.nario
+	  });
+	  avlToArray(nodo.derecho, array);
+	}
+  }
+  function actualizarNodo(carnet, nuevoNario) {
+	// Cargar el árbol AVL desde LocalStorage
+	const arbol = cargarArbolDesdeLocalStorage();
   
+	// Buscar el nodo y actualizar sus datos
+	const nodo = buscarNodo(arbol.raiz, carnet);
+	if (nodo !== null) {
+	  nodo.nario = nuevoNario;
+	} else {
+	  console.log("No se encontró el nodo con carnet:", carnet);
+	  return;
+	}
+  
+	// Guardar el árbol AVL actualizado en LocalStorage
+	guardarArbolEnLocalStorage(arbol);
+  }
+//   function convertAvlToArray() {
+// 	const arbol = cargarArbolDesdeLocalStorage();
+// 	const array = [];
+// 	avlToArray(arbol.raiz, array);
+// 	return array;
+//   }
   // Función auxiliar para recorrer el árbol en orden
   function recorrerEnOrden(nodo) {
 	if (nodo !== null) {
@@ -374,19 +408,26 @@ function recorridosAVL() {
   tablePre.innerHTML = '';
 
   // Realizar los recorridos y agregar los nodos a las tablas correspondientes
-  inorden(arbolAVL.raiz);
-  postorden(arbolAVL.raiz);
-  preorden(arbolAVL.raiz);
+  inorden(cargarArbolDesdeLocalStorage().raiz);
+  postorden(cargarArbolDesdeLocalStorage().raiz);
+  preorden(cargarArbolDesdeLocalStorage().raiz);
+  
 }
 function iniciarSesion(carnet, contraseña) {
 	const arbol = cargarArbolDesdeLocalStorage();
 	const nodoEncontrado = buscarNodo(arbol.raiz, carnet);
   
 	if (nodoEncontrado !== null && nodoEncontrado.contraseña === contraseña) {
-	  console.log("Inicio de sesión exitoso");
-	  window.location.assign("user.html");
-	  showAlert("Bienvenido "+carnet);
-	  window.miVariableGlobal = carnet;
+		
+		setCarnetAndDisplay(carnet);
+		console.log("Inicio de sesión exitoso");
+		localStorage.setItem("currentuser", JSON.stringify({ valor: carnet, nario: nodoEncontrado.nario}));
+		guardarArbolNAEnLocalStorage(nodoEncontrado.nario);
+		getcurrentuser();
+		showAlert("Bienvenido "+carnet); 
+		window.location.assign("user.html");
+		
+	  
 	//   mostrarTextoEnH2(carnet);
 	  
 	  return true
@@ -395,6 +436,36 @@ function iniciarSesion(carnet, contraseña) {
 	  return false
 	}
   }
+  function guardarArbolNAEnLocalStorage(arbol) {
+	const arbolSerializado = JSON.stringify(arbol);
+	localStorage.setItem('arbolNario', arbolSerializado);
+  }
+  
+  function cargarArbolNADesdeLocalStorage() {
+	const arbolSerializadoNa = localStorage.getItem('arbolNario');
+	if (arbolSerializadoNa) {
+	  const arbolObj = JSON.parse(arbolSerializadoNa);
+	  const arbolNario = Object.assign(new ArbolNArio(), arbolObj);
+	  arbolNario.raiz = Object.assign(new nodoArbol(), arbolObj.raiz);
+	  // Aquí podrías agregar más lógica para reconstruir correctamente el árbol si es necesario
+	  console.log(arbolNario)
+	  return arbolNario;
+	} else {
+	  return null;
+	}
+  }
+  function getcurrentuser(){
+	const usuariocur = JSON.parse(localStorage.getItem("currentuser"));
+console.log("Desde local usuario current:"+usuariocur.valor+"NARIO: "+usuariocur.nario); // Imprime el valor del carnet
+cargarArbolNADesdeLocalStorage();   
+return usuariocur.nario
+}
+function getcurrentuserid(){
+	const usuariocur = JSON.parse(localStorage.getItem("currentuser"));
+console.log("Desde local usuario current:"+usuariocur.valor); // Imprime el valor del carnet
+cargarArbolNADesdeLocalStorage();   
+return usuariocur.valor
+}
   
   // Función auxiliar para buscar un nodo con un valor específico en el árbol AVL
   function buscarNodo(nodo, valor) {
