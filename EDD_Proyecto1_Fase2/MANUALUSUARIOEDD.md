@@ -22,14 +22,14 @@ Permite al usuario identificarse con sus credenciales, teniendo 2 tipos de usuar
 
 ## Interfaz de administrador
 ![Interfaz Gráfica](https://github.com/akamariano/EDD_1S2023_PY_202101149/blob/branchcommit2fase2/EDD_Proyecto1_Fase2/eddadmingraph.png)
-![Interfaz Gráfica](https://github.com/akamariano/EDD_1S2023_PY_202101149/blob/branchcommit2fase2/EDD_Proyecto1_Fase2/adminedd.png)
 La interfaz de administrador de la webapp se compone de los  siguientes elementos:
 1. Botón Cargar Archivo: permite al administrador efectuar una carga masiva de estudiantes al sistema por medio de un archivo JSON.
 2. Botón ärbol estudiantesr: despliega un reporte de la estructura AVL empleada para el almacenamiento de los estudiantes.
 3. Botón Mostrar Alumnos: permite al usuario el despliegue en tablas de distintas formas de ordenamiento de los alumnos del sistema.
 4. Botón Cerrar Sesión: Devuelve a la página de inicio de sesión.
 ## Interfaz de Usuario
-
+![Interfaz Gráfica](https://github.com/akamariano/P1_OLCA_202101149/blob/main/UIEXREGAN.png)
+![Interfaz Gráfica](https://github.com/akamariano/EDD_1S2023_PY_202101149/blob/branchcommit2fase2/EDD_Proyecto1_Fase2/adminedd.png)
 La interfaz de usuario de la webapp se compone de los  siguientes elementos:
 Sección Carpetas
 ![Interfaz Gráfica](https://github.com/akamariano/EDD_1S2023_PY_202101149/blob/branchcommit2fase2/EDD_Proyecto1_Fase2/seccioncarpetas.png)

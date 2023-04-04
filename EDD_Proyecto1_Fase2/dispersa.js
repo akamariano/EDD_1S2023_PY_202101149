@@ -31,6 +31,7 @@ class nodoMatriz{
         this.posY = posY;
         this.posicion = nombre_archivo;
     }
+   
 }
 
 class Matriz{
@@ -39,7 +40,7 @@ class Matriz{
         this.coordenadaY = 0;
         this.coordenadaX = 0;
     }
-
+    
     buscarF(nombre_archivo){
         let aux = this.principal
         while(aux){

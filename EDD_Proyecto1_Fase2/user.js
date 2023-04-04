@@ -37,6 +37,7 @@ class ArbolNArio{
         this.raiz = new nodoArbol("/", 0)
         this.nodo_creados = 1;
     }
+    
     insertararch(nombre){
     let ruta = document.getElementById("ruta").value
     let lista_carpeta = ruta.split("/")
@@ -45,8 +46,7 @@ class ArbolNArio{
         if (carpeta.matriz === null){
         carpeta.matriz = new Matriz(carpeta.valor)
         carpeta.matriz.insertarArchivo(nombre,1)
-        console.log("NOMBREEEEE"+nombre,1)
-        console.log( "CARPE"+carpeta.matriz )
+        
         }
         else{
             carpeta.matriz.insertarArchivo(nombre,1)
@@ -203,6 +203,13 @@ class ArbolNArio{
                 break;
             case 2:
                 this.insertarHijos(carpeta_nueva, lista_carpeta)
+                const listaCircularDesdeLocalStorage1 = obtenerListaCircularDeLocalStorage();
+    const fechaHoraActual1 = new Date().toLocaleString();
+    listaCircularDesdeLocalStorage1.agregar("Se Creó carpeta el: "+fechaHoraActual1);
+    guardarListaCircularEnLocalStorage(listaCircularDesdeLocalStorage1);
+    listaCircularDesdeLocalStorage1.imprimir();
+    graficarListaCircular(listaCircularDesdeLocalStorage1);
+ actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage1));
                 break;
             case 3:
                 alert("La ruta actual no existe")
@@ -212,6 +219,13 @@ class ArbolNArio{
                 break;
             case 5:
                 this.insertarHijos(carpeta_nueva, lista_carpeta)
+                const listaCircularDesdeLocalStorage = obtenerListaCircularDeLocalStorage();
+    const fechaHoraActual = new Date().toLocaleString();
+    listaCircularDesdeLocalStorage.agregar("Se creó carpeta el: "+fechaHoraActual);
+    guardarListaCircularEnLocalStorage(listaCircularDesdeLocalStorage);
+    listaCircularDesdeLocalStorage.imprimir();
+    graficarListaCircular(listaCircularDesdeLocalStorage);
+ actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
                 break;
         }
     }
@@ -275,7 +289,84 @@ class ArbolNArio{
         }
         return cadena
     }
-
+    eliminarCarpeta(ruta) {
+        let lista_carpeta = ruta.split("/");
+        let carpeta = this.BuscarCarpetaV2(lista_carpeta);
+        if (carpeta === null) {
+            alert("La carpeta no existe");
+            return;
+        }
+    
+        let nodoPadre = this.encontrarNodoPadre(lista_carpeta.slice(0, -1));
+        if (nodoPadre === null) {
+            alert("No se pudo encontrar el nodo padre");
+            return;
+        }
+    
+        let nodoAnterior = null;
+        let nodoActual = nodoPadre.primero;
+    
+        while (nodoActual) {
+            if (nodoActual === carpeta) {
+                break;
+            }
+            nodoAnterior = nodoActual;
+            nodoActual = nodoActual.siguiente;
+        }
+    
+        if (nodoActual === null) {
+            alert("No se pudo encontrar la carpeta en el nodo padre");
+            return;
+        }
+    
+        if (nodoAnterior === null) {
+            nodoPadre.primero = nodoActual.siguiente;
+        } else {
+            nodoAnterior.siguiente = nodoActual.siguiente;
+        }
+    
+        alert("Carpeta eliminada correctamente");
+        const listaCircularDesdeLocalStorage = obtenerListaCircularDeLocalStorage();
+    const fechaHoraActual = new Date().toLocaleString();
+    listaCircularDesdeLocalStorage.agregar("Se eliminó carpeta el: "+fechaHoraActual);
+    guardarListaCircularEnLocalStorage(listaCircularDesdeLocalStorage);
+    listaCircularDesdeLocalStorage.imprimir();
+    graficarListaCircular(listaCircularDesdeLocalStorage);
+ actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
+    }
+    
+    encontrarNodoPadre(lista_carpeta) {
+        if (lista_carpeta.length === 1 && lista_carpeta[0] === "") {
+            return this.raiz;
+        }
+    
+        let aux = this.raiz.primero;
+        let nivel = lista_carpeta.length;
+        let posicion = 1;
+    
+        for (let i = 1; i < nivel; i++) {
+            if (aux !== null) {
+                while (aux) {
+                    if (
+                        posicion < lista_carpeta.length &&
+                        lista_carpeta[posicion] === aux.valor
+                    ) {
+                        posicion++;
+                        if (aux.primero !== null && posicion < lista_carpeta.length) {
+                            aux = aux.primero;
+                        }
+                        break;
+                    } else {
+                        aux = aux.siguiente;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+    
+        return aux;
+    }
     /** Modificacion 30/03/2023 */
     BuscarCarpetaV2(lista_carpeta){
         //Directorio Actual seria la Raiz
@@ -364,7 +455,7 @@ async function graficarListaCircular(listaCircular) {
       let nodoActual = listaCircular.cabeza;
       let i = 0;
       do {
-        codigo += `  ${i} [label="Nodo ${i}: ${nodoActual.fechaHora}"];\n`;
+        codigo += `  ${i} [label=" ${i}: ${nodoActual.fechaHora}"];\n`;
         nodoActual = nodoActual.siguiente;
         i++;
       } while (nodoActual !== listaCircular.cabeza);
@@ -390,12 +481,7 @@ async function graficarListaCircular(listaCircular) {
 function agregarVarios(){
     
     arbolnario= cargarArbolNADesdeLocalStorage();
-    const listaCircularDesdeLocalStorage = obtenerListaCircularDeLocalStorage();
-    const fechaHoraActual = new Date().toLocaleString();
-    listaCircularDesdeLocalStorage.agregar("Se creo carpeta el: "+fechaHoraActual);
-    guardarListaCircularEnLocalStorage(listaCircularDesdeLocalStorage);
-    listaCircularDesdeLocalStorage.imprimir();
-    graficarListaCircular(listaCircularDesdeLocalStorage);
+    
     // console.log("CIRCULAR"+cargarListaCircularDesdeLocalStorage())
     //  lcircle=cargarListaCircularDesdeLocalStorage();
     
@@ -413,7 +499,18 @@ function agregarVarios(){
     
    guardarArbolNAEnLocalStorage(arbolnario);
    actualizarNodo(getcurrentuserid(), arbolnario);
-   actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
+   
+}
+function eliminarVarios(){
+    console.log("Eliminar")
+    arbolnario= cargarArbolNADesdeLocalStorage();
+    
+    let ruta = document.getElementById("ruta").value
+    arbolnario.eliminarCarpeta(ruta)
+    refrescarArbol();  
+   guardarArbolNAEnLocalStorage(arbolnario);
+   actualizarNodo(getcurrentuserid(), arbolnario);
+  
    
     
 }

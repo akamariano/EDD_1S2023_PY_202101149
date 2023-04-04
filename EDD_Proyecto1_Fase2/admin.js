@@ -456,7 +456,7 @@ function iniciarSesion(carnet, contraseña) {
 	  return true
 	} else {
 	  console.log("Carnet o contraseña incorrectos");
-	  return false
+	  return false que tiene
 	}
   }
   function convertirListaCircularAArregloLineal(listaCircular) {
