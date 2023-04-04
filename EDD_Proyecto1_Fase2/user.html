@@ -10,6 +10,17 @@
         body {
           background-image: url('https://eltutor.files.wordpress.com/2008/06/usacwalls-001-1600x1200.jpg');
         }
+        #image3 {
+      /* Opciones de posicionamiento */
+      position: absolute; /* Permite posicionar el elemento utilizando las propiedades top, right, bottom y left */
+      top: 800px; /* Posición desde la parte superior de la ventana */
+      left: 500px; /* Posición desde la parte izquierda de la ventana */
+
+      /* Otras opciones de estilo */
+      width: 400px; /* Ancho de la imagen */
+      height: auto; /* Altura proporcional al ancho de la imagen */
+      border: 2px solid black; /* Borde de la imagen */
+    }
     </style>
 </head>
 <body>
@@ -18,7 +29,7 @@
         <div class="container-fluid">
             <a class="navbar-brand"  href="#">Bienvenido usuario</a>
         </div>
-		<button id="btnLogout" type="button" class="btn btn-secondary">Cerrar sesión</button>
+		<button id="btnLogout" type="button"class="btn btn-secondary">Cerrar sesión</button>
     </nav>
     <div class="container my-5">
         <div class="row">
@@ -40,5 +51,28 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="user.js"></script>
 	<script src="admin.js"></script>
+    
+    
+    <div class="container">
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-secondary" style="background-color: #228b4e; color: azure;" type="button" id="button-addon1" onclick="cargarArchivo()">Cargar Archivo</button>
+            <button class="btn btn-outline-secondary" style="background-color: #228b4e; color: azure;" type="button" id="button-addon1" onclick="reporteMatriz()">Mostrar Reporte Matriz</button>
+            <button class="btn btn-outline-secondary" style="background-color: #228b4e; color: azure;" type="button" id="button-addon1" onclick="asignarPermisos()">Asignar Permisos</button>
+            <input type="text" id="permiso" class="form-control" placeholder="Ej. arhivo.png-201700918-rw" aria-label="Example text with button addon" aria-describedby="button-addon1">
+        </div>
+        <div>
+            <input type="file" id="input" multiple />
+        </div>
+        <div class="container">
+            <img id="image2">
+            
+            <iframe id="pdf" width=100% height=600></iframe>
+            <script src="dispersa.js">
+            </script>
+        </div>
+    </div>
+    <img id="image3">
+    </div>
+    
 </body>
 </html>

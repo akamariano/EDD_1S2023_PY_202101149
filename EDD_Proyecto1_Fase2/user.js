@@ -28,6 +28,7 @@ function showAlert(message) {
         this.valor = valor;
         this.primero = null;
         this.id = id;
+        this.matriz = null;
     }
 }
 
@@ -36,7 +37,25 @@ class ArbolNArio{
         this.raiz = new nodoArbol("/", 0)
         this.nodo_creados = 1;
     }
-
+    insertararch(nombre){
+    let ruta = document.getElementById("ruta").value
+    let lista_carpeta = ruta.split("/")
+    let carpeta = this.BuscarCarpetaV2(lista_carpeta)
+    if (carpeta!==null){
+        if (carpeta.matriz === null){
+        carpeta.matriz = new Matriz(carpeta.valor)
+        carpeta.matriz.insertarArchivo(nombre,1)
+        console.log("NOMBREEEEE"+nombre,1)
+        console.log( "CARPE"+carpeta.matriz )
+        }
+        else{
+            carpeta.matriz.insertarArchivo(nombre,1)
+        }
+        let url = 'https://quickchart.io/graphviz?graph=';
+        let body = carpeta.matriz.reporte();
+        $("#image2").attr("src",url+body)
+    }
+    }
     BuscarCarpeta(carpeta_nueva, lista_carpeta){
         //Si la nueva carpeta se creara en la raiz, se buscara si existe o no
         if(lista_carpeta[1] === "" && this.raiz.primero !== null){
@@ -301,7 +320,20 @@ class ArbolNArio{
 
         }
     }
-
+    colocar(archivo,carnet,permiso){
+        let ruta = document.getElementById("ruta").value;
+        let lista_carpeta = ruta.split("/");
+        let carpeta = this.BuscarCarpetaV2(lista_carpeta);
+        if (carpeta !== null){
+            if (carpeta.matriz !== null){
+                 carpeta.matriz.colocarPermiso(archivo,carnet,permiso)
+                let url = 'https://quickchart.io/graphviz?graph=';
+                let body = carpeta.matriz.reporte();
+                $("#image2").attr("src", url + body);
+                
+            }
+        }
+    }
     mostrarCarpetasActuales(ruta){
         let lista_carpeta = ruta.split('/')
         let existe_carpeta = this.BuscarCarpetaV2(lista_carpeta)
@@ -319,10 +351,56 @@ class ArbolNArio{
     }
 }
 
- arbolnario = new ArbolNArio()
-
+arbolnario = new ArbolNArio()
+async function graficarListaCircular(listaCircular) {
+    function generarCodigoGraphviz(listaCircular) {
+      let codigo = "digraph G {\n";
+  
+      if (listaCircular.cabeza === null) {
+        codigo += "}\n";
+        return codigo;
+      }
+  
+      let nodoActual = listaCircular.cabeza;
+      let i = 0;
+      do {
+        codigo += `  ${i} [label="Nodo ${i}: ${nodoActual.fechaHora}"];\n`;
+        nodoActual = nodoActual.siguiente;
+        i++;
+      } while (nodoActual !== listaCircular.cabeza);
+  
+      for (let j = 0; j < i; j++) {
+        codigo += `  ${j} -> ${j === i - 1 ? 0 : j + 1};\n`;
+      }
+  
+      codigo += "}\n";
+      return codigo;
+    }
+  
+    const codigoGraphviz = generarCodigoGraphviz(listaCircular);
+    const urlQuickChart = `https://quickchart.io/graphviz?graph=${encodeURIComponent(codigoGraphviz)}`;
+    const response = await fetch(urlQuickChart);
+    const blob = await response.blob();
+    const objectURL = URL.createObjectURL(blob);
+  
+    // Establecer la URL de objeto como el atributo src del elemento <img> con id "image3"
+    const imagen = document.getElementById("image3");
+    imagen.src = objectURL;
+  }
 function agregarVarios(){
+    
     arbolnario= cargarArbolNADesdeLocalStorage();
+    const listaCircularDesdeLocalStorage = obtenerListaCircularDeLocalStorage();
+    const fechaHoraActual = new Date().toLocaleString();
+    listaCircularDesdeLocalStorage.agregar("Se creo carpeta el: "+fechaHoraActual);
+    guardarListaCircularEnLocalStorage(listaCircularDesdeLocalStorage);
+    listaCircularDesdeLocalStorage.imprimir();
+    graficarListaCircular(listaCircularDesdeLocalStorage);
+    // console.log("CIRCULAR"+cargarListaCircularDesdeLocalStorage())
+    //  lcircle=cargarListaCircularDesdeLocalStorage();
+    
+    //  console.log("Circular")
+    //  lcircle.imprimir();
     let ruta = document.getElementById("ruta").value
     let carpeta = document.getElementById("carpeta").value
     try{
@@ -332,9 +410,12 @@ function agregarVarios(){
     }
     document.getElementById("carpeta").value = "";
     refrescarArbol();  
+    
    guardarArbolNAEnLocalStorage(arbolnario);
    actualizarNodo(getcurrentuserid(), arbolnario);
-
+   actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
+   
+    
 }
 class NodoCircular {
     constructor(fechaHora) {
@@ -348,6 +429,7 @@ class NodoCircular {
       this.cabeza = null;
       this.longitud = 0;
     }
+    
   
     agregar(fechaHora) {
       const nuevoNodo = new NodoCircular(fechaHora);
@@ -384,6 +466,7 @@ class NodoCircular {
         i++;
       } while (nodoActual !== this.cabeza);
     }
+    
   }
 function refrescarArbol(){
     let url = 'https://quickchart.io/graphviz?graph=';
