@@ -28,7 +28,7 @@ La interfaz de administrador de la webapp se compone de los  siguientes elemento
 3. Botón Mostrar Alumnos: permite al usuario el despliegue en tablas de distintas formas de ordenamiento de los alumnos del sistema.
 4. Botón Cerrar Sesión: Devuelve a la página de inicio de sesión.
 ## Interfaz de Usuario
-![Interfaz Gráfica](https://github.com/akamariano/P1_OLCA_202101149/blob/main/UIEXREGAN.png)
+![Interfaz Gráfica](https://github.com/akamariano/EDD_1S2023_PY_202101149/blob/branchcommit2fase2/EDD_Proyecto1_Fase2/eddadmingraph.png)
 ![Interfaz Gráfica](https://github.com/akamariano/EDD_1S2023_PY_202101149/blob/branchcommit2fase2/EDD_Proyecto1_Fase2/adminedd.png)
 La interfaz de usuario de la webapp se compone de los  siguientes elementos:
 Sección Carpetas
