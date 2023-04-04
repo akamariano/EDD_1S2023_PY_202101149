@@ -43,11 +43,12 @@ function loadFile() {
 
 //////////////////////////
 class NodoAVL {
-	constructor(valor,nombre, contraseña,nario) {
+	constructor(valor,nombre, contraseña,nario,circular) {
 	  this.valor = valor;
 	  this.nombre = nombre;
 	  this.contraseña = contraseña;
 	  this.nario=nario;
+	  this.circular=circular;
 	  this.izquierdo = null;
 	  this.derecho = null;
 	  this.altura = 1;
@@ -85,13 +86,14 @@ class NodoAVL {
 	  nodoDerecho.valor = nodo.valor;
 	  nodoDerecho.contraseña = nodo.contraseña;
 	  nodoDerecho.nario = nodo.nario;
-  
+	  nodoDerecho.click=nodo.circular;
 	  nodo.nombre = nodoIzquierdoSubArbolDerecho.nombre;
 	  nodo.valor = nodoIzquierdoSubArbolDerecho.valor;
 	  nodo.contraseña = nodoIzquierdoSubArbolDerecho.contraseña;
-	  nodo.nario=nodoIzquierdoSubArbolDerecho.narioM
+	  nodo.nario=nodoIzquierdoSubArbolDerecho.nario;
+	  nodo.circular=nodoIzquierdoSubArbolDerecho.circular;
 	  nodo.derecho = nodoIzquierdoSubArbolDerecho;
-  
+
 	  nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
 	  nodoDerecho.altura = Math.max(this.altura(nodoDerecho.izquierdo), this.altura(nodoDerecho.derecho)) + 1;
   
@@ -107,10 +109,12 @@ class NodoAVL {
 	  nodoIzquierdo.valor = nodo.valor;
 	  nodoIzquierdo.contraseña = nodo.contraseña;
 	  nodoIzquierdo.nario=nodo.nario;
+	  nodoIzquierdo.circular=nodo.circular;
 	  nodo.nombre = nodoDerechoSubArbolIzquierdo.nombre;
 	  nodo.valor = nodoDerechoSubArbolIzquierdo.valor;
 	  nodo.contraseña = nodoDerechoSubArbolIzquierdo.contraseña;
 	  nodo.nario= nodoDerechoSubArbolIzquierdo.nario;
+	  nodo.circular=nodoDerechoSubArbolIzquierdo.circular;
 	  nodo.izquierdo = nodoDerechoSubArbolIzquierdo;
   
 	  nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
@@ -120,25 +124,25 @@ class NodoAVL {
 	}
   
 	// Función para insertar un nodo en el árbol AVL
-	insertar(valor,nombre,contraseña,nario) {
-	  this.raiz = this.insertarNodo(this.raiz, valor,nombre,contraseña,nario);
+	insertar(valor,nombre,contraseña,nario,circular) {
+	  this.raiz = this.insertarNodo(this.raiz, valor,nombre,contraseña,nario,circular);
 	}
   
-	insertarNodo(nodo, valor,nombre,contraseña,nario) {
+	insertarNodo(nodo, valor,nombre,contraseña,nario,circular) {
 	  // Si el nodo es nulo, lo creamos con el valor dado
 	  if (nodo === null) {
 		
-		return new NodoAVL(valor,nombre,contraseña,nario);
+		return new NodoAVL(valor,nombre,contraseña,nario,circular);
 	  }
   
 	  // Si el valor es menor que el valor del nodo actual, insertamos en el subárbol izquierdo
 	  if (valor < nodo.valor) {
-		nodo.izquierdo = this.insertarNodo(nodo.izquierdo, valor,nombre,contraseña,nario);
+		nodo.izquierdo = this.insertarNodo(nodo.izquierdo, valor,nombre,contraseña,nario,circular);
 	  }
   
 	  // Si el valor es mayor que el valor del nodo actual, insertamos en el subárbol derecho
 	  else if (valor > nodo.valor) {
-		nodo.derecho = this.insertarNodo(nodo.derecho, valor,nombre,contraseña,nario);
+		nodo.derecho = this.insertarNodo(nodo.derecho, valor,nombre,contraseña,nario,circular);
 	  }
   
 	  // Si el valor es igual al valor del nodo actual, no hacemos nada
@@ -250,8 +254,10 @@ function addprint(){
 	// Recorrer los datos de los alumnos y agregarlos al árbol AVL
 	for (var i = 0; i < alumnos.length; i++) {
 		arbolnario1 = new ArbolNArio();
+		Lcircular = new ListaCircular();
+		const arregloLineal2 = convertirListaCircularAArregloLineal(Lcircular);
 		console.log(arbolnario1)
-		arbolAVL.insertar(alumnos[i].carnet,alumnos[i].nombre,alumnos[i].password,arbolnario1);
+		arbolAVL.insertar(alumnos[i].carnet,alumnos[i].nombre,alumnos[i].password,arbolnario1,arregloLineal2);
 	}
 
 arbolAVL.imprimir(); // 
@@ -299,7 +305,7 @@ function guardarArbolEnLocalStorage(arbol) {
 	if (nodoObj === null) {
 	  return null;
 	}
-	var nodo = new NodoAVL(nodoObj.valor, nodoObj.nombre, nodoObj.contraseña,nodoObj.nario);
+	var nodo = new NodoAVL(nodoObj.valor, nodoObj.nombre, nodoObj.contraseña,nodoObj.nario,nodoObj.circular);
 
 	nodo.izquierdo = cargarNodoDesdeObj(nodoObj.izquierdo);
 	nodo.derecho = cargarNodoDesdeObj(nodoObj.derecho);
@@ -340,6 +346,22 @@ function guardarArbolEnLocalStorage(arbol) {
 	// Guardar el árbol AVL actualizado en LocalStorage
 	guardarArbolEnLocalStorage(arbol);
   }
+  function actualizarNodoCircu(carnet, nuevaCirc) {
+	// Cargar el árbol AVL desde LocalStorage
+	const arbol = cargarArbolDesdeLocalStorage();
+  
+	// Buscar el nodo y actualizar sus datos
+	const nodo = buscarNodo(arbol.raiz, carnet);
+	if (nodo !== null) {
+	  nodo.circular= nuevaCirc;
+	} else {
+	  console.log("No se encontró el nodo con carnet:", carnet);
+	  return;
+	}
+  
+	// Guardar el árbol AVL actualizado en LocalStorage
+	guardarArbolEnLocalStorage(arbol);
+  }
 //   function convertAvlToArray() {
 // 	const arbol = cargarArbolDesdeLocalStorage();
 // 	const array = [];
@@ -350,7 +372,7 @@ function guardarArbolEnLocalStorage(arbol) {
   function recorrerEnOrden(nodo) {
 	if (nodo !== null) {
 	  recorrerEnOrden(nodo.izquierdo);
-	  console.log("Imprimiendo desde local storage:"+nodo.valor, nodo.nombre, nodo.contraseña);
+	  console.log("Imprimiendo desde local storage:"+nodo.valor, nodo.nombre, nodo.contraseña,nodo.circular);
 	  recorrerEnOrden(nodo.derecho);
 	}
   }
@@ -421,7 +443,8 @@ function iniciarSesion(carnet, contraseña) {
 		
 		setCarnetAndDisplay(carnet);
 		console.log("Inicio de sesión exitoso");
-		localStorage.setItem("currentuser", JSON.stringify({ valor: carnet, nario: nodoEncontrado.nario}));
+		console.log(nodoEncontrado.circular);
+		localStorage.setItem("currentuser", JSON.stringify({ valor: carnet, nario: nodoEncontrado.nario, circular: nodoEncontrado.circular}));
 		guardarArbolNAEnLocalStorage(nodoEncontrado.nario);
 		getcurrentuser();
 		showAlert("Bienvenido "+carnet); 
@@ -435,6 +458,44 @@ function iniciarSesion(carnet, contraseña) {
 	  console.log("Carnet o contraseña incorrectos");
 	  return false
 	}
+  }
+  function convertirListaCircularAArregloLineal(listaCircular) {
+	let arregloLineal = [];
+  
+	if (listaCircular.cabeza === null) {
+	  return arregloLineal;
+	}
+  
+	let nodoActual = listaCircular.cabeza;
+	do {
+	  arregloLineal.push(nodoActual.fechaHora);
+	  nodoActual = nodoActual.siguiente;
+	} while (nodoActual !== listaCircular.cabeza);
+  
+	return arregloLineal;
+  }
+  
+  function guardarListaCircularEnLocalStorage(listaCircular) {
+	const arregloLineal = convertirListaCircularAArregloLineal(listaCircular);
+	localStorage.setItem("listaCircular", JSON.stringify(arregloLineal));
+  }
+  
+  function obtenerArregloLinealDeLocalStorage() {
+	const datosGuardados = localStorage.getItem("listaCircular");
+	return JSON.parse(datosGuardados) || [];
+  }
+  
+  function convertirArregloLinealAListaCircular(arregloLineal) {
+	const listaCircular = new ListaCircular();
+	for (const fechaHora of arregloLineal) {
+	  listaCircular.agregar(fechaHora);
+	}
+	return listaCircular;
+  }
+  
+  function obtenerListaCircularDeLocalStorage() {
+	const arregloLineal = obtenerArregloLinealDeLocalStorage();
+	return convertirArregloLinealAListaCircular(arregloLineal);
   }
   function guardarArbolNAEnLocalStorage(arbol) {
 	const arbolSerializado = JSON.stringify(arbol);
@@ -457,7 +518,11 @@ function iniciarSesion(carnet, contraseña) {
   function getcurrentuser(){
 	const usuariocur = JSON.parse(localStorage.getItem("currentuser"));
 console.log("Desde local usuario current:"+usuariocur.valor+"NARIO: "+usuariocur.nario); // Imprime el valor del carnet
-cargarArbolNADesdeLocalStorage();   
+console.log("CIRCULAR USER:"+usuariocur.circular);
+ackon=convertirArregloLinealAListaCircular(usuariocur.circular);
+guardarListaCircularEnLocalStorage(ackon);
+cargarArbolNADesdeLocalStorage(); 
+
 return usuariocur.nario
 }
 function getcurrentuserid(){
