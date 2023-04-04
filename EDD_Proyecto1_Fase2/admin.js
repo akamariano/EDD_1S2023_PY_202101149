@@ -522,7 +522,7 @@ console.log("CIRCULAR USER:"+usuariocur.circular);
 ackon=convertirArregloLinealAListaCircular(usuariocur.circular);
 guardarListaCircularEnLocalStorage(ackon);
 cargarArbolNADesdeLocalStorage(); 
-
+console.log(usuariocur.nario)
 return usuariocur.nario
 }
 function getcurrentuserid(){

@@ -7,7 +7,7 @@ function onChange(event) {
     reader.onload = onReaderLoad;
     nombreArchivo = event.target.files[0].name
     reader.readAsDataURL(event.target.files[0]);
-    arbolnario.insertararch(nombreArchivo)
+    
     console.log("NARIOOO"+arbolnario)
     // inputElement.value=""
    
@@ -254,6 +254,23 @@ class Matriz{
         }
         return cadena;
     }
+    imprimirMatriz() {
+        let auxY = this.principal.abajo;
+        let auxX;
+        let fila;
+    
+        console.log("Matriz dispersa:");
+        while (auxY) {
+            auxX = auxY.siguiente;
+            fila = "";
+            while (auxX) {
+                fila += "[" + auxX.posicion + "] ";
+                auxX = auxX.siguiente;
+            }
+            console.log(fila);
+            auxY = auxY.abajo;
+        }
+    }
 }
 
 const matriz = new Matriz()
@@ -265,9 +282,18 @@ function reporteMatriz(){
 }
 
 function cargarArchivo(){
-    matriz.insertarArchivo(nombreArchivo,1)
-    <
-    reporteMatriz();
+    
+    arbolnario.insertararch(nombreArchivo);
+    
+    
+    const listaCircularDesdeLocalStorage = obtenerListaCircularDeLocalStorage();
+    const fechaHoraActual = new Date().toLocaleString();
+    listaCircularDesdeLocalStorage.agregar("Se creo archivo el: "+fechaHoraActual);
+    guardarListaCircularEnLocalStorage(listaCircularDesdeLocalStorage);
+    listaCircularDesdeLocalStorage.imprimir();
+    graficarListaCircular(listaCircularDesdeLocalStorage);
+   actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
+   matriz.imprimirMatriz();
 }
 
 function asignarPermisos(){
