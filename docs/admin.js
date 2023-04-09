@@ -508,7 +508,25 @@ function iniciarSesion(carnet, contraseña) {
 	  const arbolObj = JSON.parse(arbolSerializadoNa);
 	  const arbolNario = Object.assign(new ArbolNArio(), arbolObj);
 	  arbolNario.raiz = Object.assign(new nodoArbol(), arbolObj.raiz);
+	//   const changeNestedMatrix = (nodo) => {
+	// 	if (nodo) {
+	// 	  if (node.matrix) {
+	// 		const matrixConverted =  arbolNario.deserializeMatrix(nodo.matriz);
+	// 		console.log(matrixConverted )
+	// 		nodo.matriz = matrixConverted;
+	// 	  }
+	// 	  if (nodo.primero) {
+	// 		changeNestedMatrix(nodo.primero);
+	// 	  }
+	// 	  if (nodo.primero) {
+	// 		changeNestedMatrix(nodo.siguiente);
+	// 	  }
+	// 	}
+	//   };
+	//   changeNestedMatrix(arbolNario.raiz.primero);
 	  // Aquí podrías agregar más lógica para reconstruir correctamente el árbol si es necesario
+	  // parsear cada matriz
+
 	  console.log(arbolNario)
 	  return arbolNario;
 	} else {
@@ -523,6 +541,7 @@ ackon=convertirArregloLinealAListaCircular(usuariocur.circular);
 guardarListaCircularEnLocalStorage(ackon);
 cargarArbolNADesdeLocalStorage(); 
 
+console.log(usuariocur.nario)
 return usuariocur.nario
 }
 function getcurrentuserid(){
