@@ -8,7 +8,7 @@ function checkLogin(event) {
 	var password = document.getElementById("password").value;
 
 	// Verificar si el usuario y la contraseña son correctos
-	if (maneja lasname === "admin" && password === "admin") {
+	if (username === "admin" && password === "admin") {
 		// Redirigir al usuario a la página de admin
 		window.location.replace("admin.html");
 	} else {

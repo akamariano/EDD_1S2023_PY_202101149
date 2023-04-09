@@ -17,9 +17,7 @@ function onReaderLoad(event){
     base64String = event.target.result
 }
 
-/** Modificacion de Matriz Dispersa 
- * Codigo De matriz ya explicada Clase 6
-*/
+
 
 class nodoMatriz{
     constructor(posX, posY, nombre_archivo){
@@ -33,10 +31,9 @@ class nodoMatriz{
     }
    
 }
-
 class Matriz{
     constructor(nombre){
-        this.principal = new nodoMatriz(-1,-1,nombre)
+        this.principal = new nodoMatriz(-1,-1,"Raiz")
         this.coordenadaY = 0;
         this.coordenadaX = 0;
     }
@@ -53,7 +50,7 @@ class Matriz{
         }
         return null;
     }
-
+    
     buscarC(carnet){
         let aux = this.principal;
         while(aux){
@@ -272,21 +269,96 @@ class Matriz{
             auxY = auxY.abajo;
         }
     }
+    toJSON() {
+        
+        const convertedFiles = [];
+        
+        const permisos = [];
+        let aux1 = this.principal;
+        let aux2 = this.principal;
+        if (aux1 !== null) {
+            
+            aux1 = aux1.abajo;
+            while (aux1) {
+                convertedFiles.push({
+                    text: aux1.posicion,
+                    numero: 1,
+                    nombreArchivo: aux1.posicion
+                })
+                aux1 = aux1.abajo;
+            }
+
+            
+            while (aux2) {
+                aux1 = aux2;
+                while (aux1) {
+                    aux1 = aux1.siguiente;
+                    if (aux1 !== null) {
+                        if (aux1.posY !== -1) {
+                            const fileName = this.buscarY(aux1.posY);
+                            const carnet = this.buscarX(aux1.posX);
+                            permisos.push({
+                                nombreArchivo: fileName.posicion,
+                                carnet: carnet.posicion,
+                                permisos: aux1.posicion
+                            })
+                        }
+                    }
+
+                }
+                aux2 = aux2.abajo;
+            }
+        }
+        return {
+            permisos,
+            convertedFiles
+        }
+    }
+    buscarX(x) {
+        let aux = this.principal;
+        while (aux) {
+            if (aux.posX === x && aux.posY === -1) {
+                return aux;
+            } else {
+                aux = aux.siguiente
+            }
+        }
+        return null;
+    }
+
+    buscarY(y) {
+        let aux = this.principal;
+        while (aux) {
+            if (aux.posY === y && aux.posX === -1) {
+                return aux;
+            } else {
+                aux = aux.abajo
+            }
+        }
+        return null;
+    }
 }
 
-const matriz = new Matriz()
+ matriz = new Matriz()
 
 function reporteMatriz(){
     let url = 'https://quickchart.io/graphviz?graph=';
     let body = matriz.reporte();
     $("#image2").attr("src",url+body)
 }
-
+function reporteMatriz2(matriz){
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = matriz.reporte();
+    $("#image4").attr("src",url+body)
+}
 function cargarArchivo(){
-    
-    arbolnario.insertararch(nombreArchivo);
-    
-    
+    arbolnario1= cargarArbolNADesdeLocalStorage();
+    let ruta = document.getElementById("ruta2").value;
+    pp=arbolnario1.BuscarCarpetaNew(ruta)
+    if(pp!=""){
+        matriz=arbolnario1.deserializeMatrix(pp)
+    }
+    matriz.insertarArchivo(nombreArchivo,1)
     const listaCircularDesdeLocalStorage = obtenerListaCircularDeLocalStorage();
     const fechaHoraActual = new Date().toLocaleString();
     listaCircularDesdeLocalStorage.agregar("Se creo archivo el: "+fechaHoraActual);
@@ -294,12 +366,35 @@ function cargarArchivo(){
     listaCircularDesdeLocalStorage.imprimir();
     graficarListaCircular(listaCircularDesdeLocalStorage);
    actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
-   matriz.imprimirMatriz();
+//    console.log("RAIZ"+getcurrentuser().raiz.matriz);
+//    arbito = new ArbolNArio();
+//    arbito.
+//    arbito=getcurrentuser();
+//    arbito
+//    arbito.BuscarCarpetaV2Matriz("/");
+arbolnario1.modificarMatriz(ruta, matriz.toJSON())
+guardarArbolNAEnLocalStorage(arbolnario1);
+actualizarNodo(getcurrentuserid(), arbolnario1);
+  
+//    console.log("/")
+//    arb = new ArbolNArio();
+//    console.log(arb.BuscarCarpetaV2("/").matriz);
+    reporteMatriz();
 }
 
 function asignarPermisos(){
-    let cadena = document.getElementById("permiso").value
-    let arreglo = cadena.split('-')
-    arbolnario.colocar(arreglo[0],arreglo[1],arreglo[2])
-    // reporteMatriz()
+    arbolnario1= cargarArbolNADesdeLocalStorage();
+    let ruta = document.getElementById("ruta2").value;
+    pp=arbolnario1.BuscarCarpetaNew(ruta)
+    if(pp!=""){
+        matriz=arbolnario1.deserializeMatrix(pp)
+    }
+    let cadena = document.getElementById("permiso").value;
+    let arreglo = cadena.split('-');
+    // arbolnario.colocar(arreglo[0],arreglo[1],arreglo[2]);
+    matriz.colocarPermiso(arreglo[0],arreglo[1],arreglo[2]);
+    arbolnario1.modificarMatriz(ruta, matriz.toJSON())
+guardarArbolNAEnLocalStorage(arbolnario1);
+actualizarNodo(getcurrentuserid(), arbolnario1);
+    reporteMatriz()
 }
