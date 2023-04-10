@@ -447,6 +447,7 @@ function iniciarSesion(carnet, contraseña) {
 		localStorage.setItem("currentuser", JSON.stringify({ valor: carnet, nario: nodoEncontrado.nario, circular: nodoEncontrado.circular}));
 		guardarArbolNAEnLocalStorage(nodoEncontrado.nario);
 		getcurrentuser();
+		
 		showAlert("Bienvenido "+carnet); 
 		window.location.assign("user.html");
 		
