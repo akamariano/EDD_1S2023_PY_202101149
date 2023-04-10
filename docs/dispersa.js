@@ -15,13 +15,13 @@ function onChange(event) {
 
 function onReaderLoad(event){
     base64String = event.target.result
-    console.log("BASE64"+base64String)
+    
 }
 
 
 
 class nodoMatriz{
-    constructor(posX, posY, nombre_archivo){
+    constructor(posX, posY, nombre_archivo,basestring){
         this.siguiente = null;
         this.anterior = null;
         this.abajo = null;
@@ -29,6 +29,7 @@ class nodoMatriz{
         this.posX = posX;
         this.posY = posY;
         this.posicion = nombre_archivo;
+        this.basestring = basestring;
     }
    
 }
@@ -66,7 +67,7 @@ class Matriz{
     }
 
     insertarColumna(posicion,texto){
-        const nuevoNodo = new nodoMatriz(posicion,-1,texto);
+        const nuevoNodo = new nodoMatriz(posicion,-1,texto,"");
         let piv = this.principal;
         let pivA = this.principal;
         while(piv.siguiente){
@@ -85,8 +86,9 @@ class Matriz{
         piv.siguiente = nuevoNodo;
     }
 
-    insertarFila(posicion,texto){
-        const nuevoNodo = new nodoMatriz(-1,posicion,texto);
+    insertarFila(posicion,texto,base){
+       
+        const nuevoNodo = new nodoMatriz(-1,posicion,texto,base);
         let piv = this.principal;
         let pivA = this.principal;
         while(piv.abajo){
@@ -175,19 +177,20 @@ class Matriz{
         }else if(nuevaFila !== null && nuevaColumna !== null){/* Fila si existe, Columna si existe */
             this.insertarNodo(x,y,texto);
         }else{
-            console.log("Me dio Ansiedad :(");
+            console.log("Error");
         }
     }
 
-    insertarArchivo(texto, numero){
+    insertarArchivo(texto, numero,base){
         let nuevaFila = this.buscarF(texto)
         if(nuevaFila === null){
-            this.insertarFila(this.coordenadaY,texto)
+            this.insertarFila(this.coordenadaY,texto,base)
+            console.log(base)
             this.coordenadaY++
             
         }else{
             let copia_archivo = "(" + (numero++) + ")" + nombreArchivo
-            this.insertarArchivo(copia_archivo, numero)
+            this.insertarArchivo(copia_archivo, numero,base)
         }
     }
 
@@ -283,6 +286,7 @@ class Matriz{
             while (aux1) {
                 convertedFiles.push({
                     text: aux1.posicion,
+                    codi: aux1.basestring,
                     numero: 1,
                     nombreArchivo: aux1.posicion
                 })
@@ -359,14 +363,14 @@ function reporteMatriz2(matriz){
     $("#image4").attr("src",url+body)
 }
 function cargarArchivo(){
-   
+   console.log(base64String)
     arbolnario1= cargarArbolNADesdeLocalStorage();
     let ruta = document.getElementById("ruta2").value;
     pp=arbolnario1.BuscarCarpetaNew(ruta)
     if(pp!=""){
         matriz=arbolnario1.deserializeMatrix(pp)
     }
-    matriz.insertarArchivo(nombreArchivo,1)
+    matriz.insertarArchivo(nombreArchivo,1,base64String)
     const listaCircularDesdeLocalStorage = obtenerListaCircularDeLocalStorage();
     const fechaHoraActual = new Date().toLocaleString();
     listaCircularDesdeLocalStorage.agregar("Se creo archivo el: "+fechaHoraActual);

@@ -52,7 +52,8 @@ class ArbolNArio{
        
         const permisos = serialized.permisos;
         files.forEach(file => {
-            matrix.insertarArchivo(file.text, file.numero, file.nombreArchivo);
+            console.log("DESER"+file.codi)
+            matrix.insertarArchivo(file.text, file.numero, file.nombreArchivo,file.codi);
         }
         );
         permisos.forEach(permiso => {
