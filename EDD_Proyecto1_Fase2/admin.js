@@ -124,7 +124,27 @@ class NodoAVL {
   
 	  return nodoIzquierdo;
 	}
-  
+	insertarSinRepetidos(valor, nombre, contraseña, nario, circular) {
+		if (!this.buscar(this.raiz, valor)) {
+		  this.raiz = this.insertarNodo(this.raiz, valor, nombre, contraseña, nario, circular);
+		} else {
+		  console.log(`El carnet ${valor} ya existe en el sistema.`);
+		}
+	  }
+	  
+	  buscar(nodo, valor) {
+		if (nodo === null) {
+		  return false;
+		}
+	  
+		if (valor < nodo.valor) {
+		  return this.buscar(nodo.izquierdo, valor);
+		} else if (valor > nodo.valor) {
+		  return this.buscar(nodo.derecho, valor);
+		} else {
+		  return true;
+		}
+	  }
 	// Función para insertar un nodo en el árbol AVL
 	insertar(valor,nombre,contraseña,nario,circular) {
 	  this.raiz = this.insertarNodo(this.raiz, valor,nombre,contraseña,nario,circular);
@@ -259,7 +279,7 @@ function addprint(){
 		Lcircular = new ListaCircular();
 		const arregloLineal2 = convertirListaCircularAArregloLineal(Lcircular);
 		console.log(arbolnario1)
-		arbolAVL.insertar(alumnos[i].carnet,alumnos[i].nombre,alumnos[i].password,arbolnario1,arregloLineal2);
+		arbolAVL.insertarSinRepetidos(alumnos[i].carnet,alumnos[i].nombre,alumnos[i].password,arbolnario1,arregloLineal2);
 	}
 
 arbolAVL.imprimir(); // 
