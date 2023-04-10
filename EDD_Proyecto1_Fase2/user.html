@@ -13,35 +13,62 @@
         #image3 {
       /* Opciones de posicionamiento */
       position: absolute; /* Permite posicionar el elemento utilizando las propiedades top, right, bottom y left */
-      top: 800px; /* Posición desde la parte superior de la ventana */
+      top: 1600px; /* Posición desde la parte superior de la ventana */
       left: 500px; /* Posición desde la parte izquierda de la ventana */
 
       /* Otras opciones de estilo */
-      width: 400px; /* Ancho de la imagen */
+      width: 450px; /* Ancho de la imagen */
       height: auto; /* Altura proporcional al ancho de la imagen */
-      border: 2px solid black; /* Borde de la imagen */
+      /* border: 2px solid black; Borde de la imagen */
     }
+    .carpeta {
+            display: inline-block;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .carpeta-icon {
+            font-size: 70px;
+            color: #228b4e;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .archivo-icon {
+            font-size: 70px;
+            color: #0000FF;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        #arbol {
+  background-color: white;
+}
+#benus {
+  background-color: white;
+}
     </style>
 </head>
 <body>
-	
+	<!-- <div id="texto"></div> -->
     <nav class="navbar navbar-dark bg-primary" style="background-color: #265f70;">
         <div class="container-fluid">
             <a class="navbar-brand"  href="#">Bienvenido usuario</a>
         </div>
-		<button id="btnLogout" type="button"class="btn btn-secondary">Cerrar sesión</button>
+		<button id="btnLogout" type="button" class="btn btn-secondary ms-auto btn-danger">Cerrar sesión</button>
     </nav>
+    <div id="arbol" ></div>
     <div class="container my-5">
         <div class="row">
             <div class="col-md-6">
-                <h2 class="mb-4">Bienvenido</h2>
+                <div id="benus" >
+                <h2 class="mb-4"></h2>
+            </div>
+                
                 
                 <div class="input-group mb-3">
                     <input type="text" id="ruta" class="form-control" placeholder="Ej. /" aria-label="Ruta de la carpeta">
                     <input type="text" id="carpeta" class="form-control" placeholder="Ej. Carpeta1" aria-label="Nombre de la carpeta">
                     <button class="btn btn-outline-secondary" style="background-color: #228b4e; color: azure;" type="button" onclick="agregarVarios()">Agregar Carpeta</button>
                     <button class="btn btn-outline-secondary" style="background-color: #228b4e; color: azure;" type="button" onclick="eliminarVarios()">Eliminar Carpeta</button>
-                    <button class="btn btn-outline-secondary" style="background-color:  #228b4e; color: azure;" type="button" onclick="mostraCarpetas()">Mostrar Carpetas</button>
+                    <button class="btn btn-outline-secondary" style="background-color:  #228b4e; color: azure;" type="button" onclick="Muestraico()">Mostrar Carpetas</button>
                 </div>
             </div>
             <div class="col-md-6">

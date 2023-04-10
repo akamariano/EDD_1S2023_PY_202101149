@@ -342,6 +342,12 @@ class Matriz{
  matriz = new Matriz()
 
 function reporteMatriz(){
+    arbolnario1= cargarArbolNADesdeLocalStorage();
+    let ruta = document.getElementById("ruta2").value;
+    pp=arbolnario1.BuscarCarpetaNew(ruta)
+    if(pp!=""){
+        matriz=arbolnario1.deserializeMatrix(pp)
+    }
     let url = 'https://quickchart.io/graphviz?graph=';
     let body = matriz.reporte();
     $("#image2").attr("src",url+body)
@@ -352,6 +358,7 @@ function reporteMatriz2(matriz){
     $("#image4").attr("src",url+body)
 }
 function cargarArchivo(){
+   
     arbolnario1= cargarArbolNADesdeLocalStorage();
     let ruta = document.getElementById("ruta2").value;
     pp=arbolnario1.BuscarCarpetaNew(ruta)
@@ -380,6 +387,7 @@ actualizarNodo(getcurrentuserid(), arbolnario1);
 //    arb = new ArbolNArio();
 //    console.log(arb.BuscarCarpetaV2("/").matriz);
     reporteMatriz();
+    recargarPagina();
 }
 
 function asignarPermisos(){
@@ -397,4 +405,8 @@ function asignarPermisos(){
 guardarArbolNAEnLocalStorage(arbolnario1);
 actualizarNodo(getcurrentuserid(), arbolnario1);
     reporteMatriz()
+    recargarPagina();
+}
+function recargarPagina() {
+    location.reload();
 }

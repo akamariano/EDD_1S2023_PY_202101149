@@ -41,6 +41,9 @@ class ArbolNArio{
         this.raiz = new nodoArbol("/", 0)
         this.nodo_creados = 1;
     }
+    notificarCambios() {
+        hacerhtml();
+    }
     deserializeMatrix(serialized) {
         
         const matrix = new Matriz();
@@ -252,6 +255,7 @@ class ArbolNArio{
     listaCircularDesdeLocalStorage1.imprimir();
     graficarListaCircular(listaCircularDesdeLocalStorage1);
  actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage1));
+ this.notificarCambios();
                 break;
             case 3:
                 alert("La ruta actual no existe")
@@ -268,6 +272,7 @@ class ArbolNArio{
     listaCircularDesdeLocalStorage.imprimir();
     graficarListaCircular(listaCircularDesdeLocalStorage);
  actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
+ this.notificarCambios();
                 break;
         }
     }
@@ -375,6 +380,7 @@ class ArbolNArio{
     listaCircularDesdeLocalStorage.imprimir();
     graficarListaCircular(listaCircularDesdeLocalStorage);
  actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
+ this.notificarCambios();
     }
     
     encontrarNodoPadre(lista_carpeta) {
@@ -500,6 +506,7 @@ class ArbolNArio{
         if (carpeta !== null) {
           carpeta.matriz = nuevaMatriz;
           localStorage.setItem('miMatriz', JSON.stringify(carpeta.matriz));
+          hacerhtml();
           alert("Se han guardado los cambios");
         } else {
           alert("La carpeta no existe");
@@ -645,7 +652,7 @@ function agregarVarios(){
     
    guardarArbolNAEnLocalStorage(arbolnario);
    actualizarNodo(getcurrentuserid(), arbolnario);
-   
+  
 }
 function eliminarVarios(){
     console.log("Eliminar")
@@ -656,7 +663,7 @@ function eliminarVarios(){
     refrescarArbol();  
    guardarArbolNAEnLocalStorage(arbolnario);
    actualizarNodo(getcurrentuserid(), arbolnario);
-  
+   hacerhtml();
    
     
 }
@@ -726,3 +733,68 @@ function mostraCarpetas(){
 document.getElementById("btnLogout").addEventListener("click", function() {
     window.location.href = "index.html";
   });
+  function generarArbolHtml(nodo, contenedor) {
+    if (!nodo) {
+        return;
+    }
+
+    const carpetaDiv = document.createElement("div");
+    carpetaDiv.className = "carpeta";
+    contenedor.appendChild(carpetaDiv);
+
+    const carpetaIcon = document.createElement("span");
+    carpetaIcon.className = "carpeta-icon";
+    carpetaIcon.textContent = "📁";
+    carpetaDiv.appendChild(carpetaIcon);
+
+    const carpetaNombre = document.createElement("span");
+    carpetaNombre.className = "carpeta-nombre";
+    carpetaNombre.textContent = nodo.valor;
+    carpetaDiv.appendChild(carpetaNombre);
+
+    // Mostrar los archivos como íconos
+    if (nodo.matriz) {
+        const archivos = nodo.matriz.convertedFiles;
+        archivos.forEach(archivo => {
+            const archivoIcon = document.createElement("span");
+            archivoIcon.className = "archivo-icon";
+            archivoIcon.textContent = "📄";
+            carpetaDiv.appendChild(archivoIcon);
+
+            const archivoNombre = document.createElement("span");
+            archivoNombre.className = "archivo-nombre";
+            archivoNombre.textContent = archivo.nombreArchivo;
+            carpetaDiv.appendChild(archivoNombre);
+        });
+    }
+
+    if (nodo.primero) {
+        const subcarpetasDiv = document.createElement("div");
+        carpetaDiv.appendChild(subcarpetasDiv);
+        let aux = nodo.primero;
+        while (aux) {
+            generarArbolHtml(aux, subcarpetasDiv);
+            aux = aux.siguiente;
+        }
+    }
+}
+function hacerhtml(){
+const arbolContenedor = document.getElementById("arbol");
+while (arbolContenedor.firstChild) {
+    arbolContenedor.removeChild(arbolContenedor.firstChild);
+}
+generarArbolHtml(arbolnario.raiz, arbolContenedor);
+}
+function Muestraico(){
+mostrarTexto(getcurrentuserid());
+const arbolContenedor1 = document.getElementById("arbol");
+while (arbolContenedor1.firstChild) {
+    arbolContenedor1.removeChild(arbolContenedor1.firstChild);
+}
+ar = cargarArbolNADesdeLocalStorage();
+generarArbolHtml(ar.raiz, arbolContenedor1);
+}
+function mostrarTexto(texto) {
+    const elementoH2 = document.querySelector('h2'); // o usa document.getElementById('id-del-h2')
+  elementoH2.innerText = "Se encuentra en sesión "+texto;
+  }
