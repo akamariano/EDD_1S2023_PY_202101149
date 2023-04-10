@@ -465,7 +465,7 @@ function BuscarUserPermison(carnet) {
 
 	  return true
 	} else {
-	  alert("Error, el usuario a otrogar permisos no se encuentra en el sistema")
+	  alert("Error, el usuario a otorgar permisos no se encuentra en el sistema")
 	  return false
 	}
   }
@@ -490,7 +490,7 @@ function iniciarSesion(carnet, contraseña) {
 	  
 	  return true
 	} else {
-	  console.log("Carnet o contraseña incorrectos");
+	  alert("Carnet o contraseña incorrectos");
 	  return false
 	}
   }
