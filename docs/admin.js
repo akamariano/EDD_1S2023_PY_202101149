@@ -87,11 +87,13 @@ class NodoAVL {
 	  nodoDerecho.contraseña = nodo.contraseña;
 	  nodoDerecho.nario = nodo.nario;
 	  nodoDerecho.click=nodo.circular;
-	  nodo.nombre = nodoIzquierdoSubArbolDerecho.nombre;
-	  nodo.valor = nodoIzquierdoSubArbolDerecho.valor;
-	  nodo.contraseña = nodoIzquierdoSubArbolDerecho.contraseña;
-	  nodo.nario=nodoIzquierdoSubArbolDerecho.nario;
-	  nodo.circular=nodoIzquierdoSubArbolDerecho.circular;
+	  if (nodoIzquierdoSubArbolDerecho !== null) {
+		nodo.nombre = nodoIzquierdoSubArbolDerecho.nombre;
+		nodo.valor = nodoIzquierdoSubArbolDerecho.valor;
+		nodo.contraseña = nodoIzquierdoSubArbolDerecho.contraseña;
+		nodo.nario = nodoIzquierdoSubArbolDerecho.nario;
+		nodo.circular = nodoIzquierdoSubArbolDerecho.circular;
+	  }
 	  nodo.derecho = nodoIzquierdoSubArbolDerecho;
 
 	  nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
@@ -110,13 +112,13 @@ class NodoAVL {
 	  nodoIzquierdo.contraseña = nodo.contraseña;
 	  nodoIzquierdo.nario=nodo.nario;
 	  nodoIzquierdo.circular=nodo.circular;
-	  nodo.nombre = nodoDerechoSubArbolIzquierdo.nombre;
-	  nodo.valor = nodoDerechoSubArbolIzquierdo.valor;
-	  nodo.contraseña = nodoDerechoSubArbolIzquierdo.contraseña;
-	  nodo.nario= nodoDerechoSubArbolIzquierdo.nario;
-	  nodo.circular=nodoDerechoSubArbolIzquierdo.circular;
-	  nodo.izquierdo = nodoDerechoSubArbolIzquierdo;
-  
+	  if (nodoDerechoSubArbolIzquierdo !== null) {
+		nodo.nombre = nodoDerechoSubArbolIzquierdo.nombre;
+		nodo.valor = nodoDerechoSubArbolIzquierdo.valor;
+		nodo.contraseña = nodoDerechoSubArbolIzquierdo.contraseña;
+		nodo.nario = nodoDerechoSubArbolIzquierdo.nario;
+		nodo.circular = nodoDerechoSubArbolIzquierdo.circular;
+	  }
 	  nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
 	  nodoIzquierdo.altura = Math.max(this.altura(nodoIzquierdo.izquierdo), this.altura(nodoIzquierdo.derecho)) + 1;
   
