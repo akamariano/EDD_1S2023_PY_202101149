@@ -15,6 +15,7 @@ function onChange(event) {
 
 function onReaderLoad(event){
     base64String = event.target.result
+    console.log("BASE64"+base64String)
 }
 
 
@@ -391,21 +392,40 @@ actualizarNodo(getcurrentuserid(), arbolnario1);
 }
 
 function asignarPermisos(){
+    let encontrado = false;
+    let cadena = document.getElementById("permiso").value;
+    let arreglo = cadena.split('-');
     arbolnario1= cargarArbolNADesdeLocalStorage();
     let ruta = document.getElementById("ruta2").value;
     pp=arbolnario1.BuscarCarpetaNew(ruta)
+    console.log("CONVERTED FILES"+pp.convertedFiles)
+    archivos=pp.convertedFiles;
+    archivos.forEach(function(archivo) {
+        if (archivo.nombreArchivo === arreglo[0]) {
+          encontrado = true;
+        }
+      });
+      
+      if (!encontrado) {
+        alert("Error: no se ha encontrado el archivo con el nombre especificado");
+      }
     if(pp!=""){
         matriz=arbolnario1.deserializeMatrix(pp)
     }
-    let cadena = document.getElementById("permiso").value;
-    let arreglo = cadena.split('-');
+    
     // arbolnario.colocar(arreglo[0],arreglo[1],arreglo[2]);
-    matriz.colocarPermiso(arreglo[0],arreglo[1],arreglo[2]);
+    if ( BuscarUserPermison(arreglo[1]) && encontrado==true && (arreglo[2]==="r" || arreglo[2]==="w" )){
+        matriz.colocarPermiso(arreglo[0],arreglo[1],arreglo[2]);
     arbolnario1.modificarMatriz(ruta, matriz.toJSON())
 guardarArbolNAEnLocalStorage(arbolnario1);
 actualizarNodo(getcurrentuserid(), arbolnario1);
     reporteMatriz()
     recargarPagina();
+    }
+    else{
+        alert("Error");
+    }
+    
 }
 function recargarPagina() {
     location.reload();

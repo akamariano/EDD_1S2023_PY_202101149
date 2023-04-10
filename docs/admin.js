@@ -435,6 +435,18 @@ function recorridosAVL() {
   preorden(cargarArbolDesdeLocalStorage().raiz);
   
 }
+function BuscarUserPermison(carnet) {
+	const arbol = cargarArbolDesdeLocalStorage();
+	const nodoEncontrado = buscarNodo(arbol.raiz, carnet);
+  
+	if (nodoEncontrado !== null) {
+
+	  return true
+	} else {
+	  alert("Error, el usuario a otrogar permisos no se encuentra en el sistema")
+	  return false
+	}
+  }
 function iniciarSesion(carnet, contraseña) {
 	const arbol = cargarArbolDesdeLocalStorage();
 	const nodoEncontrado = buscarNodo(arbol.raiz, carnet);
