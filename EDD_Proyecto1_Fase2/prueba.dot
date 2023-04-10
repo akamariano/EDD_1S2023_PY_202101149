@@ -1,0 +1,7 @@
+
+digraph G {
+node [fontname="Arial"];
+"12345 - Juan Pérez\n2" [shape=rectangle, style=filled, fillcolor=white];
+"12345 - Juan Pérez\n2" -> "67890 - María García\n1";
+"67890 - María García\n1" [shape=rectangle, style=filled, fillcolor=white];
+}
