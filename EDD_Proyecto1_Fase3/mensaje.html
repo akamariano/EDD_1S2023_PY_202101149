@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDD GoDrive Mensajes</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 30%;
+            height: 100%;
+            background-color: #8DC88F;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar__header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+        }
+        .sidebar__search {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+        }
+        .sidebar__chats {
+            flex: 1;
+            overflow-y: scroll;
+        }
+        .chat-window {
+            width: 70%;
+            height: 100%;
+            background-color: #5B808C;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-window__header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+        }
+        .chat-window__messages {
+            flex: 1;
+            overflow-y: scroll;
+            padding: 15px;
+            display: flex;
+            flex-direction: column; 
+        }
+        .chat-window__footer {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #ccc;
+        }
+        .message {
+            margin-bottom: 15px;
+            max-width: 70%;
+        }
+        .message.sent {
+            text-align: right;
+            color: #ffffff;
+            background-color: #228b4e;
+            border-radius: 20px 20px 0px 20px;
+            padding: 10px;
+            display: inline-block;
+        }
+        .message.received {
+            text-align: left;
+            color: #ffffff;
+            background-color: #265f70;
+            border-radius: 20px 0px 20px 20px;
+            padding: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar__header d-flex justify-content-between align-items-center p-3">
+            <h1 class="text-white">Usuario</h1>
+            <button id="loadFileBtn" type="button" class="btn btn-primary">Nuevo chat</button>
+        </div>
+        <div class="sidebar__search p-3">
+            <input type="text" class="form-control" placeholder="Buscar...">
+        </div>
+        <div class="sidebar__chats">
+            <!-- Listado de chats -->
+        </div>
+    </div>
+    <div class="chat-window">
+        <div class="chat-window__header d-flex justify-content-between align-items-center p-3">
+            <h2 class="text-white">Nombre del contacto</h2>
+        </div>
+        <div class="chat-window__messages">
+            <!-- Mensajes del chat -->
+            <div class="message received">
+                Hola, ¿cómo estás?
+            </div>
+            <div class="message sent">
+                ¡Hola! Estoy bien, gracias por preguntar. ¿Y tú?
+            </div>
+            <div class="message received">
+                Estoy bien también, gracias.
+            </div>
+        </div>
+        <div class="chat-window__footer d-flex align-items-center p-3">
+            <input type="text" class="form-control" placeholder="Escribe un mensaje...">
+            <button id="loadFileBtn" type="button" class="btn btn-primary">Enviar</button>
+        </div>
+    </div>
+</body>
+</html>
