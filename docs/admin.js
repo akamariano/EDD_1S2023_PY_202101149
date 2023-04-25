@@ -78,52 +78,27 @@ class NodoAVL {
   
 	// Función auxiliar para realizar una rotación hacia la izquierda
 	rotacionIzquierda(nodo) {
-	  const nodoDerecho = nodo.derecho;
-	  const nodoIzquierdoSubArbolDerecho = nodoDerecho.izquierdo;
-  
-	  nodoDerecho.izquierdo = nodo;
-	  nodoDerecho.nombre = nodo.nombre;
-	  nodoDerecho.valor = nodo.valor;
-	  nodoDerecho.contraseña = nodo.contraseña;
-	  nodoDerecho.nario = nodo.nario;
-	  nodoDerecho.click=nodo.circular;
-	  if (nodoIzquierdoSubArbolDerecho !== null) {
-		nodo.nombre = nodoIzquierdoSubArbolDerecho.nombre;
-		nodo.valor = nodoIzquierdoSubArbolDerecho.valor;
-		nodo.contraseña = nodoIzquierdoSubArbolDerecho.contraseña;
-		nodo.nario = nodoIzquierdoSubArbolDerecho.nario;
-		nodo.circular = nodoIzquierdoSubArbolDerecho.circular;
+		const nodoDerecho = nodo.derecho;
+		nodo.derecho = nodoDerecho.izquierdo;
+		nodoDerecho.izquierdo = nodo;
+	
+		nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
+		nodoDerecho.altura = Math.max(this.altura(nodoDerecho.izquierdo), this.altura(nodoDerecho.derecho)) + 1;
+	
+		return nodoDerecho;
 	  }
-	  nodo.derecho = nodoIzquierdoSubArbolDerecho;
-
-	  nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
-	  nodoDerecho.altura = Math.max(this.altura(nodoDerecho.izquierdo), this.altura(nodoDerecho.derecho)) + 1;
-  
-	  return nodoDerecho;
-	}
   
 	// Función auxiliar para realizar una rotación hacia la derecha
 	rotacionDerecha(nodo) {
-	  const nodoIzquierdo = nodo.izquierdo;
-	  const nodoDerechoSubArbolIzquierdo = nodoIzquierdo.derecho;
-	  nodoIzquierdo.derecho = nodo;
-	  nodoIzquierdo.nombre = nodo.nombre;
-	  nodoIzquierdo.valor = nodo.valor;
-	  nodoIzquierdo.contraseña = nodo.contraseña;
-	  nodoIzquierdo.nario=nodo.nario;
-	  nodoIzquierdo.circular=nodo.circular;
-	  if (nodoDerechoSubArbolIzquierdo !== null) {
-		nodo.nombre = nodoDerechoSubArbolIzquierdo.nombre;
-		nodo.valor = nodoDerechoSubArbolIzquierdo.valor;
-		nodo.contraseña = nodoDerechoSubArbolIzquierdo.contraseña;
-		nodo.nario = nodoDerechoSubArbolIzquierdo.nario;
-		nodo.circular = nodoDerechoSubArbolIzquierdo.circular;
+		const nodoIzquierdo = nodo.izquierdo;
+		nodo.izquierdo = nodoIzquierdo.derecho;
+		nodoIzquierdo.derecho = nodo;
+	
+		nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
+		nodoIzquierdo.altura = Math.max(this.altura(nodoIzquierdo.izquierdo), this.altura(nodoIzquierdo.derecho)) + 1;
+	
+		return nodoIzquierdo;
 	  }
-	  nodo.altura = Math.max(this.altura(nodo.izquierdo), this.altura(nodo.derecho)) + 1;
-	  nodoIzquierdo.altura = Math.max(this.altura(nodoIzquierdo.izquierdo), this.altura(nodoIzquierdo.derecho)) + 1;
-  
-	  return nodoIzquierdo;
-	}
 	insertarSinRepetidos(valor, nombre, contraseña, nario, circular) {
 		if (!this.buscar(this.raiz, valor)) {
 		  this.raiz = this.insertarNodo(this.raiz, valor, nombre, contraseña, nario, circular);
@@ -301,6 +276,27 @@ d3.select("#"+"lienzo").graphviz()
 	console.log("ALUM"+alumnos.nario);
 
 }
+function avlToArray2(nodo, array) {
+	if (nodo !== null) {
+	  avlToArray2(nodo.izquierdo, array);
+	  array.push({
+		carnet: nodo.valor,
+		nombre: nodo.nombre,
+		contraseña: nodo.contraseña
+	  });
+	  avlToArray2(nodo.derecho, array);
+	}
+  }
+  function obtenerArrayDesdeLocalStorage() {
+	// Cargar el árbol AVL desde LocalStorage
+	var arbol = cargarArbolDesdeLocalStorage();
+	// Crear un array vacío para almacenar los nodos del árbol
+	var array = [];
+	// Llenar el array con los nodos del árbol usando avlToArray
+	avlToArray2(arbol.raiz, array);
+	// Retornar el array
+	return array;
+  }
 // Función para guardar el árbol AVL en LocalStorage
 function guardarArbolEnLocalStorage(arbol) {
 	// Convertir el árbol a una cadena de texto JSON
@@ -308,7 +304,18 @@ function guardarArbolEnLocalStorage(arbol) {
 	// Almacenar la cadena en LocalStorage
 	localStorage.setItem("arbolAVL", arbolJson);
   }
-
+  function cargarObjetoDesdeLocalStorage() {
+	 // Obtener la cadena de texto JSON del objeto almacenado en LocalStorage
+	 var objetoJson = localStorage.getItem("arbolAVL");
+	 // Si no hay ninguna cadena almacenada, retornar un objeto vacío
+	 if (!objetoJson) {
+	   return {};
+	 }
+	 // Convertir la cadena de texto JSON a un objeto JavaScript
+	 var objeto = JSON.parse(objetoJson);
+	 console.log(objeto)
+	 return objeto;
+  }
   function cargarArbolDesdeLocalStorage() {
 	// Obtener la cadena de texto JSON del árbol almacenada en LocalStorage
 	var arbolJson = localStorage.getItem("arbolAVL");
@@ -400,6 +407,13 @@ function guardarArbolEnLocalStorage(arbol) {
   }
 //////////////////////////
 function recorridosAVL() {
+	document.getElementById('dataTablePre').style.display = 'table';
+	document.getElementById('hPre').style.display = 'block';
+	document.getElementById('dataTablePost').style.display = 'table';	
+	document.getElementById('hPost').style.display = 'block';	
+	document.getElementById('dataTableIn').style.display = 'table';	
+	document.getElementById('hIn').style.display = 'block';	
+
   const tableIn = document.getElementById('dataTableIn').getElementsByTagName('tbody')[0];
   const tablePost = document.getElementById('dataTablePost').getElementsByTagName('tbody')[0];
   const tablePre = document.getElementById('dataTablePre').getElementsByTagName('tbody')[0];
@@ -612,3 +626,30 @@ avlvar.addEventListener('click', addprint);
 document.getElementById("btnLogout").addEventListener("click", function() {
   window.location.href = "index.html";
 });
+document.getElementById("bnewa").addEventListener("click", function() {
+	window.location.href = "adminnew.html";
+  });
+function visibleIn(){
+	document.getElementById('dataTableIn').style.display = 'table';
+	document.getElementById('hIn').style.display = 'block';
+	document.getElementById('dataTablePost').style.display = 'none';	
+	document.getElementById('hPost').style.display = 'none';	
+	document.getElementById('dataTablePre').style.display = 'none';	
+	document.getElementById('hPre').style.display = 'none';	
+}
+function visiblePost(){
+	document.getElementById('dataTablePost').style.display = 'table';
+	document.getElementById('hPost').style.display = 'block';
+	document.getElementById('dataTableIn').style.display = 'none';	
+	document.getElementById('hIn').style.display = 'none';	
+	document.getElementById('dataTablePre').style.display = 'none';	
+	document.getElementById('hPre').style.display = 'none';	
+}
+function visiblePre(){
+	document.getElementById('dataTablePre').style.display = 'table';
+	document.getElementById('hPre').style.display = 'block';
+	document.getElementById('dataTablePost').style.display = 'none';	
+	document.getElementById('hPost').style.display = 'none';	
+	document.getElementById('dataTableIn').style.display = 'none';	
+	document.getElementById('hIn').style.display = 'none';	
+}

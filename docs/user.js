@@ -245,7 +245,17 @@ class ArbolNArio{
         let existe_carpeta = this.BuscarCarpeta(carpeta_nueva, lista_carpeta)
         switch(existe_carpeta){
             case 1:
-                alert("La carpeta ya existe")
+                alert("La carpeta ya existe, se generará una copia")
+                this.insertarHijos(carpeta_nueva+("Copia"), lista_carpeta)
+                const listaCircularDesdeLocalStorage2 = obtenerListaCircularDeLocalStorage();
+                const fechaHoraActual2 = new Date().toLocaleString();
+                listaCircularDesdeLocalStorage1.agregar("Se Creó carpeta el: "+fechaHoraActual2);
+                guardarListaCircularEnLocalStorage(listaCircularDesdeLocalStorage2);
+                listaCircularDesdeLocalStorage2.imprimir();
+                graficarListaCircular(listaCircularDesdeLocalStorage2);
+            actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage1));
+            this.notificarCambios();
+
                 break;
             case 2:
                 this.insertarHijos(carpeta_nueva, lista_carpeta)
@@ -646,7 +656,7 @@ function agregarVarios(){
     try{
         arbolnario.insertarValor(ruta,carpeta);
     }catch(error){
-        alert("Hubo un error al insertar el nodo")
+        // alert("Hubo un error al insertar el nodo")
     }
     document.getElementById("carpeta").value = "";
     refrescarArbol();  
@@ -733,6 +743,12 @@ function mostraCarpetas(){
 
 document.getElementById("btnLogout").addEventListener("click", function() {
     window.location.href = "index.html";
+  });
+  document.getElementById("btncompartidos").addEventListener("click", function() {
+    window.location.href = "index.html";
+  });
+  document.getElementById("btnchat").addEventListener("click", function() {
+    window.location.href = "mensaje.html";
   });
   function generarArbolHtml(nodo, contenedor) {
     if (!nodo) {

@@ -68,7 +68,14 @@
 			<button id="avlload" type="button" class="btn btn-primary">Árbol de estudiantes</button>
 			<button id="btnreload" type="button" class="btn btn-primary">Mostrar Alumnos</button>
 			<button id="btnLogout" type="button" class="btn btn-secondary">Cerrar sesión</button>
+			<button id="bnewa" type="button" class="btn btn-secondary">Aprobados</button>
 
+		</div>
+		<div class="btn-group mb-3" role="group" >
+			<button onclick="visibleIn()" class="btn btn-primary">Inorden</button>
+			<button onclick="visiblePost()" class="btn btn-primary">Postorden</button>
+				
+	
 		</div>
 		<div style="margin-top: 25px;">
 			<div style="display: inline-block;">
@@ -87,7 +94,7 @@
 			</div>
 		
 			<div style="display: inline-block;">
-				<h1>In Orden</h1>
+				<h1 id="hIn">In Orden</h1>
 				<table id="dataTableIn">
 					<thead>
 						<tr>
@@ -102,7 +109,7 @@
 			</div>
 		
 			<div style="display: inline-block;">
-				<h1>Post Orden</h1>
+				<h1 id="hPost">Post Orden</h1>
 				<table id="dataTablePost">
 					<thead>
 						<tr>
@@ -117,7 +124,7 @@
 			</div>
 		
 			<div style="display: inline-block;">
-				<h1>Pre Orden</h1>
+				<h1 id="hPre">Pre Orden</h1>
 				<table id="dataTablePre">
 					<thead>
 						<tr>
@@ -134,9 +141,7 @@
 			
 	</div>
 	
-	
-	
-	
+
 	
 	<script src='https://cdn.jsdelivr.net/npm/viz.js'></script>
 	<script src="admin.js"></script>

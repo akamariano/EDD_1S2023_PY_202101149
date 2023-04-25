@@ -17,7 +17,79 @@ function onReaderLoad(event){
     base64String = event.target.result
     
 }
+class Nodo {
+  constructor(name, base64) {
+    this.name = name;
+    this.base64 = base64;
+    this.siguiente = null;
+  }
+}
 
+class ListaEnlazada {
+  constructor() {
+    this.cabeza = null;
+    this.tamaño = 0;
+  }
+
+  agregar(name, base64) {
+    const nuevoNodo = new Nodo(name, base64);
+    if (this.cabeza === null) {
+      this.cabeza = nuevoNodo;
+    } else {
+      let actual = this.cabeza;
+      while (actual.siguiente !== null) {
+        actual = actual.siguiente;
+      }
+      actual.siguiente = nuevoNodo;
+    }
+    this.tamaño++;
+  }
+
+  eliminar(name) {
+    if (this.cabeza === null) {
+      return null;
+    }
+    if (this.cabeza.name === name) {
+      this.cabeza = this.cabeza.siguiente;
+      this.tamaño--;
+      return;
+    }
+    let actual = this.cabeza;
+    let anterior = null;
+    while (actual !== null) {
+      if (actual.name === name) {
+        anterior.siguiente = actual.siguiente;
+        this.tamaño--;
+        return;
+      }
+      anterior = actual;
+      actual = actual.siguiente;
+    }
+    return null;
+  }
+
+  buscar(name) {
+    let actual = this.cabeza;
+    while (actual !== null) {
+      if (actual.name === name) {
+        return actual;
+      }
+      actual = actual.siguiente;
+    }
+    return null;
+  }
+
+  imprimir() {
+    let actual = this.cabeza;
+    let resultado = '';
+    while (actual !== null) {
+      resultado += `[${actual.name}: ${actual.base64}] -> `;
+      actual = actual.siguiente;
+    }
+    resultado += 'null';
+    console.log(resultado);
+  }
+}
 
 
 class nodoMatriz{
@@ -35,7 +107,7 @@ class nodoMatriz{
 }
 class Matriz{
     constructor(nombre){
-        this.principal = new nodoMatriz(-1,-1,"Raiz")
+        this.principal = new nodoMatriz(-1,-1,"Raiz","")
         this.coordenadaY = 0;
         this.coordenadaX = 0;
     }
@@ -107,8 +179,8 @@ class Matriz{
         piv.abajo = nuevoNodo;
     }
     
-    insertarNodo(x,y,texto){
-        const nuevoNodo = new nodoMatriz(x,y,texto);
+    insertarNodo(x,y,texto,base){
+        const nuevoNodo = new nodoMatriz(x,y,texto,base);
         let tempX = this.principal;
         let tempY = this.principal;
         //Agregar en Columna
@@ -159,7 +231,7 @@ class Matriz{
         }
     }
 
-    insertarElemento(x,y){
+    insertarElemento(x,y,base){
         let texto = x + "," + y;
         let nuevaFila = this.buscarF(y);
         let nuevaColumna = this.buscarC(x);
@@ -167,21 +239,22 @@ class Matriz{
         if(nuevaFila === null && nuevaColumna === null){
             this.insertarColumna(x, "C"+x);
             this.insertarFila(y, "F"+y);
-            this.insertarNodo(x,y,texto);
+            this.insertarNodo(x,y,texto,base);
         }else if(nuevaFila === null && nuevaColumna !== null){ /* Fila no existe, Columna si existe */
             this.insertarFila(y,"F"+y);
-            this.insertarNodo(x,y,texto);
+            this.insertarNodo(x,y,texto,base);
         }else if(nuevaFila !== null && nuevaColumna === null){/* Fila si existe, Columna no existe */
             this.insertarColumna(x, "C"+x);
             this.insertarNodo(x,y,texto);
         }else if(nuevaFila !== null && nuevaColumna !== null){/* Fila si existe, Columna si existe */
-            this.insertarNodo(x,y,texto);
+            this.insertarNodo(x,y,texto,base);
         }else{
             console.log("Error");
         }
     }
 
     insertarArchivo(texto, numero,base){
+        console.log("TEXTO"+texto)
         let nuevaFila = this.buscarF(texto)
         if(nuevaFila === null){
             this.insertarFila(this.coordenadaY,texto,base)
@@ -345,6 +418,7 @@ class Matriz{
 }
 
  matriz = new Matriz()
+ lista = new ListaEnlazada()
 
 function reporteMatriz(){
     arbolnario1= cargarArbolNADesdeLocalStorage();
@@ -362,18 +436,49 @@ function reporteMatriz2(matriz){
     let body = matriz.reporte();
     $("#image4").attr("src",url+body)
 }
+function guardarEnLocalStorage(listaEnlazada) {
+    const listaEnlazadaString = JSON.stringify(listaEnlazada);
+    localStorage.setItem("listaEnlazada", listaEnlazadaString);
+  }
+  
+  function recuperarDeLocalStorage() {
+    const listaEnlazadaString = localStorage.getItem("listaEnlazada");
+    if (listaEnlazadaString === null) {
+      return null;
+    }
+  
+    const listaEnlazadaObj = JSON.parse(listaEnlazadaString);
+    const listaEnlazada = new ListaEnlazada();
+  
+    listaEnlazada.cabeza = listaEnlazadaObj.cabeza;
+    listaEnlazada.tamaño = listaEnlazadaObj.tamaño;
+  
+    return listaEnlazada;
+  }
 function cargarArchivo(){
    console.log(base64String)
     arbolnario1= cargarArbolNADesdeLocalStorage();
     let ruta = document.getElementById("ruta2").value;
     pp=arbolnario1.BuscarCarpetaNew(ruta)
+    console.log("RUTAA"+ruta)
     if(pp!=""){
         matriz=arbolnario1.deserializeMatrix(pp)
+    }
+    ll=recuperarDeLocalStorage();
+    if (ll==null){
+        lista.agregar(nombreArchivo,base64String);
+        guardarEnLocalStorage(lista);
+    }
+    else{
+        lista=recuperarDeLocalStorage();
+        lista.agregar(nombreArchivo,base64String);
+        guardarEnLocalStorage(lista);
+        
     }
     matriz.insertarArchivo(nombreArchivo,1,base64String)
     const listaCircularDesdeLocalStorage = obtenerListaCircularDeLocalStorage();
     const fechaHoraActual = new Date().toLocaleString();
-    listaCircularDesdeLocalStorage.agregar("Se creo archivo el: "+fechaHoraActual);
+    listaCircularDesdeLocalStorage.agregar("Se creó archivo el: "+fechaHoraActual);
     guardarListaCircularEnLocalStorage(listaCircularDesdeLocalStorage);
     listaCircularDesdeLocalStorage.imprimir();
     graficarListaCircular(listaCircularDesdeLocalStorage);
@@ -418,7 +523,7 @@ function asignarPermisos(){
     }
     
     // arbolnario.colocar(arreglo[0],arreglo[1],arreglo[2]);
-    if ( BuscarUserPermison(arreglo[1]) && encontrado==true && (arreglo[2]==="r" || arreglo[2]==="w" )){
+    if ( BuscarUserPermison(arreglo[1]) && encontrado==true && (arreglo[2]==="r" || arreglo[2]==="w" || arreglo[2]==="r,w")){
         matriz.colocarPermiso(arreglo[0],arreglo[1],arreglo[2]);
     arbolnario1.modificarMatriz(ruta, matriz.toJSON())
 guardarArbolNAEnLocalStorage(arbolnario1);
