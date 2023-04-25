@@ -1,3 +1,4 @@
+
 const inputElement = document.getElementById("input");
 inputElement.addEventListener("change", onChange, false);
 let nombreArchivo = ""
@@ -7,93 +8,117 @@ function onChange(event) {
     reader.onload = onReaderLoad;
     nombreArchivo = event.target.files[0].name
     reader.readAsDataURL(event.target.files[0]);
-    
-    console.log("NARIOOO"+arbolnario)
+
+    // console.log("NARIOOO"+arbolnario)
     // inputElement.value=""
-   
+
+}
+// Función para comprimir un string en Base64
+function compressBase64String(base64String) {
+    const binaryString = atob(base64String);
+    const input = new Uint8Array(binaryString.length);
+
+    for (let i = 0; i < binaryString.length; i++) {
+        input[i] = binaryString.charCodeAt(i);
+    }
+
+    const compressedData = pako.deflate(input);
+    return btoa(String.fromCharCode.apply(null, compressedData));
 }
 
-function onReaderLoad(event){
+// Función para descomprimir un string en Base64
+function decompressBase64String(compressedBase64String) {
+    const compressedBinaryString = atob(compressedBase64String);
+    const compressedInput = new Uint8Array(compressedBinaryString.length);
+
+    for (let i = 0; i < compressedBinaryString.length; i++) {
+        compressedInput[i] = compressedBinaryString.charCodeAt(i);
+    }
+
+    const decompressedData = pako.inflate(compressedInput);
+    return btoa(String.fromCharCode.apply(null, decompressedData));
+}
+function onReaderLoad(event) {
     base64String = event.target.result
-    
+
 }
 class Nodo {
-  constructor(name, base64) {
-    this.name = name;
-    this.base64 = base64;
-    this.siguiente = null;
-  }
+    constructor(name, base64) {
+        this.name = name;
+        this.base64 = base64;
+        this.siguiente = null;
+    }
 }
 
 class ListaEnlazada {
-  constructor() {
-    this.cabeza = null;
-    this.tamaño = 0;
-  }
+    constructor() {
+        this.cabeza = null;
+        this.tamaño = 0;
+    }
 
-  agregar(name, base64) {
-    const nuevoNodo = new Nodo(name, base64);
-    if (this.cabeza === null) {
-      this.cabeza = nuevoNodo;
-    } else {
-      let actual = this.cabeza;
-      while (actual.siguiente !== null) {
-        actual = actual.siguiente;
-      }
-      actual.siguiente = nuevoNodo;
+    agregar(name, base64) {
+        const nuevoNodo = new Nodo(name, base64);
+        if (this.cabeza === null) {
+            this.cabeza = nuevoNodo;
+        } else {
+            let actual = this.cabeza;
+            while (actual.siguiente !== null) {
+                actual = actual.siguiente;
+            }
+            actual.siguiente = nuevoNodo;
+        }
+        this.tamaño++;
     }
-    this.tamaño++;
-  }
 
-  eliminar(name) {
-    if (this.cabeza === null) {
-      return null;
+    eliminar(name) {
+        if (this.cabeza === null) {
+            return null;
+        }
+        if (this.cabeza.name === name) {
+            this.cabeza = this.cabeza.siguiente;
+            this.tamaño--;
+            return;
+        }
+        let actual = this.cabeza;
+        let anterior = null;
+        while (actual !== null) {
+            if (actual.name === name) {
+                anterior.siguiente = actual.siguiente;
+                this.tamaño--;
+                return;
+            }
+            anterior = actual;
+            actual = actual.siguiente;
+        }
+        return null;
     }
-    if (this.cabeza.name === name) {
-      this.cabeza = this.cabeza.siguiente;
-      this.tamaño--;
-      return;
-    }
-    let actual = this.cabeza;
-    let anterior = null;
-    while (actual !== null) {
-      if (actual.name === name) {
-        anterior.siguiente = actual.siguiente;
-        this.tamaño--;
-        return;
-      }
-      anterior = actual;
-      actual = actual.siguiente;
-    }
-    return null;
-  }
 
-  buscar(name) {
-    let actual = this.cabeza;
-    while (actual !== null) {
-      if (actual.name === name) {
-        return actual;
-      }
-      actual = actual.siguiente;
+    buscar(name) {
+        let actual = this.cabeza;
+        while (actual !== null) {
+            if (actual.name === name) {
+                return actual;
+            }
+            actual = actual.siguiente;
+        }
+        return null;
     }
-    return null;
-  }
 
-  imprimir() {
-    let actual = this.cabeza;
-    let resultado = '';
-    while (actual !== null) {
-      resultado += `[${actual.name}: ${actual.base64}] -> `;
-      actual = actual.siguiente;
+    imprimir() {
+        let actual = this.cabeza;
+        let resultado = '';
+        while (actual !== null) {
+            resultado += `[${actual.name}: ${actual.base64}] -> `;
+            actual = actual.siguiente;
+        }
+        resultado += 'null';
+        console.log(resultado);
     }
-    resultado += 'null';
-    console.log(resultado);
-  }
 }
 
 
-class nodoMatriz{
-    constructor(posX, posY, nombre_archivo,basestring){
+class nodoMatriz {
+    constructor(posX, posY, nombre_archivo, basestring) {
         this.siguiente = null;
         this.anterior = null;
         this.abajo = null;
@@ -103,50 +128,50 @@ class nodoMatriz{
         this.posicion = nombre_archivo;
         this.basestring = basestring;
     }
-   
+
 }
-class Matriz{
-    constructor(nombre){
-        this.principal = new nodoMatriz(-1,-1,"Raiz","")
+class Matriz {
+    constructor(nombre) {
+        this.principal = new nodoMatriz(-1, -1, "Raiz", "")
         this.coordenadaY = 0;
         this.coordenadaX = 0;
     }
-    
-    buscarF(nombre_archivo){
+
+    buscarF(nombre_archivo) {
         let aux = this.principal
-        while(aux){
+        while (aux) {
             /**if(aux.posY === y) */
-            if(aux.posicion === nombre_archivo){
+            if (aux.posicion === nombre_archivo) {
                 return aux;
-            }else{
+            } else {
                 aux = aux.abajo;
             }
         }
         return null;
     }
-    
-    buscarC(carnet){
+
+    buscarC(carnet) {
         let aux = this.principal;
-        while(aux){
+        while (aux) {
             /**if(aux.posX === x) */
-            if(aux.posicion === carnet){
+            if (aux.posicion === carnet) {
                 return aux;
-            }else{
+            } else {
                 aux = aux.siguiente
             }
         }
         return null;
     }
 
-    insertarColumna(posicion,texto){
-        const nuevoNodo = new nodoMatriz(posicion,-1,texto,"");
+    insertarColumna(posicion, texto) {
+        const nuevoNodo = new nodoMatriz(posicion, -1, texto, "");
         let piv = this.principal;
         let pivA = this.principal;
-        while(piv.siguiente){
-            if(nuevoNodo.posX > piv.posX){
+        while (piv.siguiente) {
+            if (nuevoNodo.posX > piv.posX) {
                 pivA = piv;
                 piv = piv.siguiente
-            }else{
+            } else {
                 nuevoNodo.siguiente = piv;
                 nuevoNodo.anterior = pivA;
                 pivA.siguiente = nuevoNodo;
@@ -158,16 +183,16 @@ class Matriz{
         piv.siguiente = nuevoNodo;
     }
 
-    insertarFila(posicion,texto,base){
-       
-        const nuevoNodo = new nodoMatriz(-1,posicion,texto,base);
+    insertarFila(posicion, texto, base) {
+
+        const nuevoNodo = new nodoMatriz(-1, posicion, texto, base);
         let piv = this.principal;
         let pivA = this.principal;
-        while(piv.abajo){
-            if(nuevoNodo.posY > piv.posY){
+        while (piv.abajo) {
+            if (nuevoNodo.posY > piv.posY) {
                 pivA = piv;
                 piv = piv.abajo;
-            }else{
+            } else {
                 nuevoNodo.abajo = piv;
                 nuevoNodo.arriba = pivA;
                 pivA.abajo = nuevoNodo;
@@ -178,127 +203,127 @@ class Matriz{
         nuevoNodo.arriba = piv;
         piv.abajo = nuevoNodo;
     }
-    
-    insertarNodo(x,y,texto,base){
-        const nuevoNodo = new nodoMatriz(x,y,texto,base);
+
+    insertarNodo(x, y, texto, base) {
+        const nuevoNodo = new nodoMatriz(x, y, texto, base);
         let tempX = this.principal;
         let tempY = this.principal;
         //Agregar en Columna
-        while(tempX.siguiente){
-            if(tempX.posX === nuevoNodo.posX){
+        while (tempX.siguiente) {
+            if (tempX.posX === nuevoNodo.posX) {
                 break;
             }
             tempX = tempX.siguiente;
         }
-        while(true){
-            if(tempX.posY === nuevoNodo.posY){
+        while (true) {
+            if (tempX.posY === nuevoNodo.posY) {
                 break;
-            }else if(tempX.abajo !== null && tempX.abajo.posY > nuevoNodo.posY){
+            } else if (tempX.abajo !== null && tempX.abajo.posY > nuevoNodo.posY) {
                 nuevoNodo.abajo = tempX.abajo;
                 nuevoNodo.arriba = tempX;
                 tempX.abajo = nuevoNodo;
                 break;
-            }else if(tempX.abajo === null){
+            } else if (tempX.abajo === null) {
                 nuevoNodo.arriba = tempX
                 nuevoNodo.abajo = tempX.abajo
                 tempX.abajo = nuevoNodo;
                 break;
-            }else{
+            } else {
                 tempX = tempX.abajo;
             }
         }
         //Agregar en Fila
-        while(tempY.abajo){
-            if(tempY.posY === nuevoNodo.posY){
+        while (tempY.abajo) {
+            if (tempY.posY === nuevoNodo.posY) {
                 break;
             }
             tempY = tempY.abajo;
         }
-        while(true){
-            if(tempY.posX === nuevoNodo.posX){
+        while (true) {
+            if (tempY.posX === nuevoNodo.posX) {
                 break;
-            }else if(tempY.siguiente !== null && tempY.siguiente.posX > nuevoNodo.posX){
+            } else if (tempY.siguiente !== null && tempY.siguiente.posX > nuevoNodo.posX) {
                 nuevoNodo.siguiente = tempY.siguiente;
                 nuevoNodo.anterior = tempY;
                 tempY.siguiente = nuevoNodo;
-            }else if(tempY.siguiente === null){
+            } else if (tempY.siguiente === null) {
                 nuevoNodo.anterior = tempY;
                 nuevoNodo.siguiente = tempY.siguiente;
                 tempY.siguiente = nuevoNodo;
-            }else{
+            } else {
                 tempY = tempY.siguiente;
             }
         }
     }
 
-    insertarElemento(x,y,base){
+    insertarElemento(x, y, base) {
         let texto = x + "," + y;
         let nuevaFila = this.buscarF(y);
         let nuevaColumna = this.buscarC(x);
         /** Fila y Columna no existen */
-        if(nuevaFila === null && nuevaColumna === null){
-            this.insertarColumna(x, "C"+x);
-            this.insertarFila(y, "F"+y);
-            this.insertarNodo(x,y,texto,base);
-        }else if(nuevaFila === null && nuevaColumna !== null){ /* Fila no existe, Columna si existe */
-            this.insertarFila(y,"F"+y);
-            this.insertarNodo(x,y,texto,base);
-        }else if(nuevaFila !== null && nuevaColumna === null){/* Fila si existe, Columna no existe */
-            this.insertarColumna(x, "C"+x);
-            this.insertarNodo(x,y,texto);
-        }else if(nuevaFila !== null && nuevaColumna !== null){/* Fila si existe, Columna si existe */
-            this.insertarNodo(x,y,texto,base);
-        }else{
+        if (nuevaFila === null && nuevaColumna === null) {
+            this.insertarColumna(x, "C" + x);
+            this.insertarFila(y, "F" + y);
+            this.insertarNodo(x, y, texto, base);
+        } else if (nuevaFila === null && nuevaColumna !== null) { /* Fila no existe, Columna si existe */
+            this.insertarFila(y, "F" + y);
+            this.insertarNodo(x, y, texto, base);
+        } else if (nuevaFila !== null && nuevaColumna === null) {/* Fila si existe, Columna no existe */
+            this.insertarColumna(x, "C" + x);
+            this.insertarNodo(x, y, texto);
+        } else if (nuevaFila !== null && nuevaColumna !== null) {/* Fila si existe, Columna si existe */
+            this.insertarNodo(x, y, texto, base);
+        } else {
             console.log("Error");
         }
     }
 
-    insertarArchivo(texto, numero,base){
-        console.log("TEXTO"+texto)
+    insertarArchivo(texto, numero, base) {
+        console.log("TEXTO" + texto)
         let nuevaFila = this.buscarF(texto)
-        if(nuevaFila === null){
-            this.insertarFila(this.coordenadaY,texto,base)
+        if (nuevaFila === null) {
+            this.insertarFila(this.coordenadaY, texto, base)
             console.log(base)
             this.coordenadaY++
-            
-        }else{
+
+        } else {
             let copia_archivo = "(" + (numero++) + ")" + nombreArchivo
-            this.insertarArchivo(copia_archivo, numero,base)
+            this.insertarArchivo(copia_archivo, numero, base)
         }
     }
 
-    colocarPermiso(archivo, carnet, permisos){
+    colocarPermiso(archivo, carnet, permisos) {
         /** NOTA: Paso Previo Buscar en AVL si existe el carnet*/
         let nuevaColumna = this.buscarC(carnet)
         let nuevaFila = this.buscarF(archivo)
-        if(nuevaColumna === null){
+        if (nuevaColumna === null) {
             this.insertarColumna(this.coordenadaX, carnet)
             this.coordenadaX++
             nuevaColumna = this.buscarC(carnet)
         }
-        if(nuevaColumna !== null && nuevaFila !== null){
+        if (nuevaColumna !== null && nuevaFila !== null) {
             this.insertarNodo(nuevaColumna.posX, nuevaFila.posY, permisos)
         }
     }
 
-    reporte(){
+    reporte() {
         let cadena = "";
         let aux1 = this.principal;
         let aux2 = this.principal;
         let aux3 = this.principal;
-        if(aux1 !== null){
+        if (aux1 !== null) {
             cadena = "digraph MatrizCapa{ node[shape=box]  rankdir=UD;  {rank=min; ";
             /** Creacion de los nodos actuales */
-            while(aux1){
-                cadena += "nodo" + (aux1.posX+1) + (aux1.posY+1) + "[label=\"" + aux1.posicion + "\" ,rankdir=LR,group=" + (aux1.posX+1) + "]; ";
+            while (aux1) {
+                cadena += "nodo" + (aux1.posX + 1) + (aux1.posY + 1) + "[label=\"" + aux1.posicion + "\" ,rankdir=LR,group=" + (aux1.posX + 1) + "]; ";
                 aux1 = aux1.siguiente;
             }
             cadena += "}"
-            while(aux2){
+            while (aux2) {
                 aux1 = aux2;
                 cadena += "{rank=same; ";
-                while(aux1){
-                    cadena += "nodo" + (aux1.posX+1) + (aux1.posY+1) + "[label=\"" + aux1.posicion + "\" ,group=" + (aux1.posX+1) + "]; ";
+                while (aux1) {
+                    cadena += "nodo" + (aux1.posX + 1) + (aux1.posY + 1) + "[label=\"" + aux1.posicion + "\" ,group=" + (aux1.posX + 1) + "]; ";
                     aux1 = aux1.siguiente;
                 }
                 cadena += "}";
@@ -306,25 +331,25 @@ class Matriz{
             }
             /** Conexiones entre los nodos de la matriz */
             aux2 = aux3;
-            while(aux2){
+            while (aux2) {
                 aux1 = aux2;
-                while(aux1.siguiente){
-                    cadena += "nodo" + (aux1.posX+1) + (aux1.posY+1) + " -> " + "nodo" + (aux1.siguiente.posX+1) + (aux1.siguiente.posY+1) + " [dir=both];"
+                while (aux1.siguiente) {
+                    cadena += "nodo" + (aux1.posX + 1) + (aux1.posY + 1) + " -> " + "nodo" + (aux1.siguiente.posX + 1) + (aux1.siguiente.posY + 1) + " [dir=both];"
                     aux1 = aux1.siguiente
                 }
                 aux2 = aux2.abajo;
             }
             aux2 = aux3;
-            while(aux2){
+            while (aux2) {
                 aux1 = aux2;
-                while(aux1.abajo){
-                    cadena += "nodo" + (aux1.posX+1) + (aux1.posY+1) + " -> " + "nodo" + (aux1.abajo.posX+1) + (aux1.abajo.posY+1) + " [dir=both];"
+                while (aux1.abajo) {
+                    cadena += "nodo" + (aux1.posX + 1) + (aux1.posY + 1) + " -> " + "nodo" + (aux1.abajo.posX + 1) + (aux1.abajo.posY + 1) + " [dir=both];"
                     aux1 = aux1.abajo
                 }
                 aux2 = aux2.siguiente;
             }
-            cadena +=  "}";
-        }else{
+            cadena += "}";
+        } else {
             cadena = "No hay elementos en la matriz"
         }
         return cadena;
@@ -333,7 +358,7 @@ class Matriz{
         let auxY = this.principal.abajo;
         let auxX;
         let fila;
-    
+
         console.log("Matriz dispersa:");
         while (auxY) {
             auxX = auxY.siguiente;
@@ -347,14 +372,14 @@ class Matriz{
         }
     }
     toJSON() {
-        
+
         const convertedFiles = [];
-        
+
         const permisos = [];
         let aux1 = this.principal;
         let aux2 = this.principal;
         if (aux1 !== null) {
-            
+
             aux1 = aux1.abajo;
             while (aux1) {
                 convertedFiles.push({
@@ -366,7 +391,7 @@ class Matriz{
                 aux1 = aux1.abajo;
             }
 
-            
+
             while (aux2) {
                 aux1 = aux2;
                 while (aux1) {
@@ -417,124 +442,128 @@ class Matriz{
     }
 }
 
- matriz = new Matriz()
- lista = new ListaEnlazada()
+matriz = new Matriz()
+lista = new ListaEnlazada()
 
-function reporteMatriz(){
-    arbolnario1= cargarArbolNADesdeLocalStorage();
+function reporteMatriz() {
+    arbolnario1 = cargarArbolNADesdeLocalStorage();
     let ruta = document.getElementById("ruta2").value;
-    pp=arbolnario1.BuscarCarpetaNew(ruta)
-    if(pp!=""){
-        matriz=arbolnario1.deserializeMatrix(pp)
+    pp = arbolnario1.BuscarCarpetaNew(ruta)
+    if (pp != "") {
+        matriz = arbolnario1.deserializeMatrix(pp)
     }
     let url = 'https://quickchart.io/graphviz?graph=';
     let body = matriz.reporte();
-    $("#image2").attr("src",url+body)
+    $("#image2").attr("src", url + body)
 }
-function reporteMatriz2(matriz){
+function reporteMatriz2(matriz) {
     let url = 'https://quickchart.io/graphviz?graph=';
     let body = matriz.reporte();
-    $("#image4").attr("src",url+body)
+    $("#image4").attr("src", url + body)
 }
 function guardarEnLocalStorage(listaEnlazada) {
     const listaEnlazadaString = JSON.stringify(listaEnlazada);
     localStorage.setItem("listaEnlazada", listaEnlazadaString);
-  }
-  
-  function recuperarDeLocalStorage() {
+}
+
+function recuperarDeLocalStorage() {
     const listaEnlazadaString = localStorage.getItem("listaEnlazada");
     if (listaEnlazadaString === null) {
-      return null;
+        return null;
     }
-  
+
     const listaEnlazadaObj = JSON.parse(listaEnlazadaString);
     const listaEnlazada = new ListaEnlazada();
-  
+
     listaEnlazada.cabeza = listaEnlazadaObj.cabeza;
     listaEnlazada.tamaño = listaEnlazadaObj.tamaño;
-  
+
     return listaEnlazada;
-  }
-function cargarArchivo(){
-   console.log(base64String)
-    arbolnario1= cargarArbolNADesdeLocalStorage();
+}
+function cargarArchivo() {
+    console.log(base64String);
+    //    newba=compressBase64String(base64String);
+    //    base64String=newba;
+    console.log(base64String);
+    arbolnario1 = cargarArbolNADesdeLocalStorage();
     let ruta = document.getElementById("ruta2").value;
-    pp=arbolnario1.BuscarCarpetaNew(ruta)
-    console.log("RUTAA"+ruta)
-    if(pp!=""){
-        matriz=arbolnario1.deserializeMatrix(pp)
+    pp = arbolnario1.BuscarCarpetaNew(ruta)
+    console.log("RUTAA" + ruta)
+    console.log("VARIABLE PP", pp)
+    if (pp != "") {
+        matriz = arbolnario1.deserializeMatrix(pp)
     }
-    ll=recuperarDeLocalStorage();
-    if (ll==null){
-        lista.agregar(nombreArchivo,base64String);
+    ll = recuperarDeLocalStorage();
+    if (ll == null) {
+        lista.agregar(nombreArchivo, base64String);
         guardarEnLocalStorage(lista);
     }
-    else{
-        lista=recuperarDeLocalStorage();
-        lista.agregar(nombreArchivo,base64String);
+    else {
+        lista = recuperarDeLocalStorage();
+        lista.agregar(nombreArchivo, base64String);
         guardarEnLocalStorage(lista);
-        
+
     }
-    matriz.insertarArchivo(nombreArchivo,1,base64String)
+    matriz.insertarArchivo(nombreArchivo, 1, base64String)
     const listaCircularDesdeLocalStorage = obtenerListaCircularDeLocalStorage();
     const fechaHoraActual = new Date().toLocaleString();
-    listaCircularDesdeLocalStorage.agregar("Se creó archivo el: "+fechaHoraActual);
+    listaCircularDesdeLocalStorage.agregar("Se creó archivo el: " + fechaHoraActual);
     guardarListaCircularEnLocalStorage(listaCircularDesdeLocalStorage);
     listaCircularDesdeLocalStorage.imprimir();
     graficarListaCircular(listaCircularDesdeLocalStorage);
-   actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
-//    console.log("RAIZ"+getcurrentuser().raiz.matriz);
-//    arbito = new ArbolNArio();
-//    arbito.
-//    arbito=getcurrentuser();
-//    arbito
-//    arbito.BuscarCarpetaV2Matriz("/");
-arbolnario1.modificarMatriz(ruta, matriz.toJSON())
-guardarArbolNAEnLocalStorage(arbolnario1);
-actualizarNodo(getcurrentuserid(), arbolnario1);
-  
-//    console.log("/")
-//    arb = new ArbolNArio();
-//    console.log(arb.BuscarCarpetaV2("/").matriz);
+    actualizarNodoCircu(getcurrentuserid(), convertirListaCircularAArregloLineal(listaCircularDesdeLocalStorage));
+    //    console.log("RAIZ"+getcurrentuser().raiz.matriz);
+    //    arbito = new ArbolNArio();
+    //    arbito.
+    //    arbito=getcurrentuser();
+    //    arbito
+    //    arbito.BuscarCarpetaV2Matriz("/");
+    arbolnario1.modificarMatriz(ruta, matriz.toJSON())
+    guardarArbolNAEnLocalStorage(arbolnario1);
+    actualizarNodo(getcurrentuserid(), arbolnario1);
+
+    //    console.log("/")
+    //    arb = new ArbolNArio();
+    //    console.log(arb.BuscarCarpetaV2("/").matriz);
     reporteMatriz();
     recargarPagina();
 }
 
-function asignarPermisos(){
+function asignarPermisos() {
     let encontrado = false;
     let cadena = document.getElementById("permiso").value;
     let arreglo = cadena.split('-');
-    arbolnario1= cargarArbolNADesdeLocalStorage();
+    arbolnario1 = cargarArbolNADesdeLocalStorage();
     let ruta = document.getElementById("ruta2").value;
-    pp=arbolnario1.BuscarCarpetaNew(ruta)
-    console.log("CONVERTED FILES"+pp.convertedFiles)
-    archivos=pp.convertedFiles;
-    archivos.forEach(function(archivo) {
+    pp = arbolnario1.BuscarCarpetaNew(ruta)
+    console.log("CONVERTED FILES" + pp.convertedFiles)
+    archivos = pp.convertedFiles;
+    archivos.forEach(function (archivo) {
         if (archivo.nombreArchivo === arreglo[0]) {
-          encontrado = true;
+            encontrado = true;
         }
-      });
-      
-      if (!encontrado) {
+    });
+
+    if (!encontrado) {
         alert("Error: no se ha encontrado el archivo con el nombre especificado");
-      }
-    if(pp!=""){
-        matriz=arbolnario1.deserializeMatrix(pp)
     }
-    
+    if (pp != "") {
+        matriz = arbolnario1.deserializeMatrix(pp)
+    }
+
     // arbolnario.colocar(arreglo[0],arreglo[1],arreglo[2]);
-    if ( BuscarUserPermison(arreglo[1]) && encontrado==true && (arreglo[2]==="r" || arreglo[2]==="w" || arreglo[2]==="r,w")){
-        matriz.colocarPermiso(arreglo[0],arreglo[1],arreglo[2]);
-    arbolnario1.modificarMatriz(ruta, matriz.toJSON())
-guardarArbolNAEnLocalStorage(arbolnario1);
-actualizarNodo(getcurrentuserid(), arbolnario1);
-    reporteMatriz()
-    recargarPagina();
+    if (BuscarUserPermison(arreglo[1]) && encontrado == true && (arreglo[2] === "r" || arreglo[2] === "w" || arreglo[2] === "r,w")) {
+        matriz.colocarPermiso(arreglo[0], arreglo[1], arreglo[2]);
+        arbolnario1.modificarMatriz(ruta, matriz.toJSON())
+        guardarArbolNAEnLocalStorage(arbolnario1);
+        actualizarNodo(getcurrentuserid(), arbolnario1);
+        reporteMatriz()
+        recargarPagina();
     }
-    else{
+    else {
         alert("Error");
     }
-    
+
 }
 function recargarPagina() {
     location.reload();

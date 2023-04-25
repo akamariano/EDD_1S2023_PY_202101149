@@ -429,7 +429,7 @@ class ArbolNArio{
     BuscarCarpetaNew(ruta){
         let lista_carpeta = ruta.split("/")
         if(lista_carpeta[1] === "" && this.raiz.primero !== null){
-            return this.raiz
+            return this.raiz.matriz
         }
         else if (lista_carpeta[1] === "" && this.raiz.primero === null){
             return null
