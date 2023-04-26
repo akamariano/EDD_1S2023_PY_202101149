@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EDD GoDrive Mensajes</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         * {
             margin: 0;
@@ -87,6 +88,13 @@
             padding: 10px;
             display: inline-block;
         }
+        .contact {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #91b09f;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
     </style>
 </head>
 <body>
@@ -123,5 +131,7 @@
             <button id="loadFileBtn" type="button" class="btn btn-primary">Enviar</button>
         </div>
     </div>
+    <script src="mensaje.js"></script>
+    <script src="admin.js"></script>
 </body>
 </html>

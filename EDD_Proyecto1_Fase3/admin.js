@@ -599,6 +599,12 @@ console.log("Desde local usuario current:"+usuariocur.valor); // Imprime el valo
 cargarArbolNADesdeLocalStorage();   
 return usuariocur.valor
 }
+function getcurrentuserid2(){
+	const usuariocur = JSON.parse(localStorage.getItem("currentuser"));
+console.log("Desde local usuario current:"+usuariocur.valor); // Imprime el valor del carnet
+// cargarArbolNADesdeLocalStorage();   
+return usuariocur.valor
+}
   
   // Función auxiliar para buscar un nodo con un valor específico en el árbol AVL
   function buscarNodo(nodo, valor) {
@@ -653,3 +659,19 @@ function visiblePre(){
 	document.getElementById('dataTableIn').style.display = 'none';	
 	document.getElementById('hIn').style.display = 'none';	
 }
+function displayBlockchainGraphWithExtraInfoa() {
+    const graphCode = localStorage.getItem('basicGraphvizCode');
+	
+    const graphUrl = "https://quickchart.io/graphviz?graph=" + encodeURIComponent(graphCode);
+    window.open(graphUrl, '_blank');
+}
+function displayBlockchainGraphWithExtraInfo2() {
+    const graphCode =localStorage.getItem('extraInfoGraphvizCode');
+	
+    const graphUrl = "https://quickchart.io/graphviz?graph=" + encodeURIComponent(graphCode);
+    window.open(graphUrl, '_blank');
+}
+document.addEventListener('DOMContentLoaded', () => {
+	displayBlockchainGraphWithExtraInfoa();
+    displayBlockchainGraphWithExtraInfo2();
+});
