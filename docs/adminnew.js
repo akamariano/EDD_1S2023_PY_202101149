@@ -58,12 +58,29 @@ class TablaHash{
             this.ReInsertar()
         } 
     }
-
+    isPrime(numero) {
+        if (numero <= 1) {
+            return false
+        }
+        if (numero === 2) {
+            return true
+        }
+        if (numero % 2 === 0) {
+            return false
+        }
+        for (let i = 3; i <= Math.sqrt(numero); i += 2) {
+            if (numero % i === 0) {
+                return false
+            };
+        }
+        return true;
+    }
     nueva_capacidad(){ //Sustituir por un algoritmo del siguiente numero primo
         let numero = this.capacidad + 1;
         while (!this.isPrime(numero)) {
-          numero++;
+            numero++;
         }
+        console.log(numero)
         return numero;
     }
 
@@ -203,7 +220,7 @@ class TablaHash{
 
 }
 
-const tablaHash = new TablaHash()
+tablaHash = new TablaHash()
 
 // const inputElement = document.getElementById("input");
 // inputElement.addEventListener("change", onChange, false);
@@ -215,18 +232,69 @@ const tablaHash = new TablaHash()
 document.addEventListener("DOMContentLoaded", function() {
     onReaderLoad();
   });
+  function caesarCipher(str, shift) {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const n = alphabet.length;
+    let result = '';
   
+    for (let i = 0; i < str.length; i++) {
+      const char = str[i];
+      const index = alphabet.indexOf(char);
+  
+      if (index !== -1) {
+        const newIndex = (index + shift) % n;
+        result += alphabet[newIndex];
+      } else {
+        result += char;
+      }
+    }
+  
+    return result;
+  }
+  function guardarTablaHashEnLocalStorage(tablaHash) {
+    const tablaHashSerializada = JSON.stringify(tablaHash.tabla);
+    localStorage.setItem('tablaHash', tablaHashSerializada);
+}
+  function cargarTablaHashDesdeLocalStorage() {
+    const tablaHashSerializada = localStorage.getItem('tablaHash');
+    if (tablaHashSerializada) {
+        const tablaHashData = JSON.parse(tablaHashSerializada);
+        const nuevaTablaHash = new TablaHash();
+        nuevaTablaHash.tabla = tablaHashData;
+        nuevaTablaHash.capacidad = tablaHashData.length;
+        nuevaTablaHash.utilizacion = tablaHashData.filter(nodo => nodo !== null).length;
+        return nuevaTablaHash;
+    }
+    return null;
+}
+  function encrypt(password, shift = 3) {
+    return caesarCipher(password, shift);
+  }
+  
+  function decrypt(encrypted, shift = 3) {
+    return caesarCipher(encrypted, -shift);
+  }
   function onReaderLoad() {
+    if (cargarTablaHashDesdeLocalStorage()==null){
     var obj = obtenerArrayDesdeLocalStorage();
     console.log("AA" + obtenerArrayDesdeLocalStorage())
     for (var elemento of obj) {
-        console.log("Carnet:", elemento.carnet);
-        console.log("Nombre:", elemento.nombre);
-        console.log("Contraseña:", elemento.contraseña);
-        tablaHash.insertar(elemento.carnet, elemento.nombre, elemento.contraseña);
+        // console.log("Carnet:", elemento.carnet);
+        // console.log("Nombre:", elemento.nombre);
+        // console.log("Contraseña:", elemento.contraseña);
+        passencoded=encrypt(elemento.contraseña)
+       
+        tablaHash.insertar(elemento.carnet, elemento.nombre, passencoded);
       }
     console.log(tablaHash.tabla);
     tablaHash.genera_tabla();
+    guardarTablaHashEnLocalStorage(tablaHash);
+}
+else{
+    tablaHash=cargarTablaHashDesdeLocalStorage()
+    tablaHash.genera_tabla();
+    guardarTablaHashEnLocalStorage(tablaHash);
+}
   }
 function busqueda(){
     let carnet = document.getElementById("valor").value;
