@@ -1,5 +1,7 @@
 
 const inputElement = document.getElementById("input");
+let compartidos= []
+let databaseARR=[]
 inputElement.addEventListener("change", onChange, false);
 let nombreArchivo = ""
 let base64String = ""
@@ -493,15 +495,17 @@ function cargarArchivo() {
     if (pp != "") {
         matriz = arbolnario1.deserializeMatrix(pp)
     }
-    ll = recuperarDeLocalStorage();
-    if (ll == null) {
-        lista.agregar(nombreArchivo, base64String);
-        guardarEnLocalStorage(lista);
+    // ll = recuperarDeLocalStorage();
+    if (recuperarArregloDeLocalStorageb()== null) {
+        console.log("if1")
+        agregarObjetob(nombreArchivo, base64String);
+        guardarArregloEnLocalStorageb()
     }
-    else {
-        lista = recuperarDeLocalStorage();
-        lista.agregar(nombreArchivo, base64String);
-        guardarEnLocalStorage(lista);
+    else{
+        console.log("Else data")
+        datab = recuperarArregloDeLocalStorageb();
+       agregarObjetob(nombreArchivo, base64String);
+        guardarArregloEnLocalStorageb()
 
     }
     matriz.insertarArchivo(nombreArchivo, 1, base64String)
@@ -554,17 +558,84 @@ function asignarPermisos() {
     // arbolnario.colocar(arreglo[0],arreglo[1],arreglo[2]);
     if (BuscarUserPermison(arreglo[1]) && encontrado == true && (arreglo[2] === "r" || arreglo[2] === "w" || arreglo[2] === "r,w")) {
         matriz.colocarPermiso(arreglo[0], arreglo[1], arreglo[2]);
+        if (recuperarArregloDeLocalStorage()==null){
+        agregarObjeto(getcurrentuserid(),arreglo[1],ruta,arreglo[0],arreglo[2]);
+        guardarArregloEnLocalStorage();
         arbolnario1.modificarMatriz(ruta, matriz.toJSON())
         guardarArbolNAEnLocalStorage(arbolnario1);
         actualizarNodo(getcurrentuserid(), arbolnario1);
         reporteMatriz()
         recargarPagina();
+        }
+        else{
+        compartidos=recuperarArregloDeLocalStorage();
+        agregarObjeto(getcurrentuserid(),arreglo[1],ruta,arreglo[0],arreglo[2]);
+        guardarArregloEnLocalStorage();
+        arbolnario1.modificarMatriz(ruta, matriz.toJSON())
+        guardarArbolNAEnLocalStorage(arbolnario1);
+        actualizarNodo(getcurrentuserid(), arbolnario1);
+        reporteMatriz()
+        recargarPagina();
+        }
+        
+        
     }
     else {
         alert("Error");
     }
 
 }
+function agregarObjeto(atributo1, atributo2, atributo3,atributo4,atributo5) {
+   compartidos.push({
+      atributo1: atributo1,
+      atributo2: atributo2,
+      atributo3: atributo3,
+      atributo4: atributo4,
+      atributo5: atributo5,
+    });
+  }
+  function guardarArregloEnLocalStorage() {
+    localStorage.setItem("miArreglo", JSON.stringify(compartidos));
+  }
 function recargarPagina() {
     location.reload();
 }
+function recuperarArregloDeLocalStorage() {
+    let arregloRecuperado = localStorage.getItem("miArreglo");
+  
+    if (arregloRecuperado !== null) {
+      miArreglo = JSON.parse(arregloRecuperado);
+      return miArreglo
+    } else {
+      console.log("No se encontró el arreglo en el Local Storage");
+      return null
+    }
+  }
+  function agregarObjetob(atributo1, atributo2) {
+      // Recupera el arreglo actualizado del localStorage antes de agregar el nuevo objeto
+      databaseARR = recuperarArregloDeLocalStorageb() || [];
+
+      // Agrega el nuevo objeto al arreglo
+      databaseARR.push({
+          atributo1: atributo1,
+          atributo2: atributo2
+      });
+  
+      // Guarda el arreglo actualizado en el localStorage
+      guardarArregloEnLocalStorageb();
+   }
+   function guardarArregloEnLocalStorageb() {
+     localStorage.setItem("miArreglob", JSON.stringify(databaseARR));
+   }
+
+ function recuperarArregloDeLocalStorageb() {
+    let arregloRecuperado2 = localStorage.getItem("miArreglob");
+
+    if (arregloRecuperado2 !== null) {
+        miArreglo2 = JSON.parse(arregloRecuperado2);
+        return miArreglo2;
+    } else {
+        console.log("No se encontró el arreglo en el Local Storage");
+        return null;
+    }
+   }

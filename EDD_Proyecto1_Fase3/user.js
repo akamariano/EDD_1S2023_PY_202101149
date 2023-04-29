@@ -745,7 +745,7 @@ document.getElementById("btnLogout").addEventListener("click", function() {
     window.location.href = "index.html";
   });
   document.getElementById("btncompartidos").addEventListener("click", function() {
-    window.location.href = "index.html";
+    window.location.href = "compartidos.html";
   });
   document.getElementById("btnchat").addEventListener("click", function() {
     window.location.href = "mensaje.html";

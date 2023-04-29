@@ -145,6 +145,7 @@ class TablaHash{
       
         // Crea un elemento <table> y un elemento <tbody>
         var divtable = document.createElement("div");
+        
         var tabla   = document.createElement("table");
         var tblBody = document.createElement("tbody");
         var salto_html = document.createElement("br")
@@ -293,6 +294,7 @@ document.addEventListener("DOMContentLoaded", function() {
 else{
     tablaHash=cargarTablaHashDesdeLocalStorage()
     tablaHash.genera_tabla();
+    crearTabla(recuperarArregloDeLocalStorage2());
     guardarTablaHashEnLocalStorage(tablaHash);
 }
   }
@@ -300,3 +302,30 @@ function busqueda(){
     let carnet = document.getElementById("valor").value;
     tablaHash.busquedaUsuario(carnet)
 }
+function recuperarArregloDeLocalStorage2() {
+    let arregloRecuperado = localStorage.getItem("miArreglo");
+  
+    if (arregloRecuperado !== null) {
+      miArreglo = JSON.parse(arregloRecuperado);
+      return miArreglo
+    } else {
+      console.log("No se encontró el arreglo en el Local Storage");
+      return null
+    }
+  }
+  function crearTabla(arreglo) {
+    const tabla = document.getElementById('tablaDinamica');
+    const tbody = tabla.getElementsByTagName('tbody')[0];
+
+    arreglo.forEach(obj => {
+      const fila = document.createElement('tr');
+      
+      Object.values(obj).forEach(valor => {
+        const celda = document.createElement('td');
+        celda.textContent = valor;
+        fila.appendChild(celda);
+      });
+
+      tbody.appendChild(fila);
+    });
+  }
