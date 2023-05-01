@@ -243,6 +243,13 @@ function getExtraInfoGraphvizCode() {
 document.addEventListener('DOMContentLoaded', () => {
     generateGraphvizCodeWithExtraInfo(myBlockchain)
     generateGraphvizCode(myBlockchain);
+    getcurrentusern();
     localStorage.setItem('basicGraphvizCode', basicGraphvizCode);
 localStorage.setItem('extraInfoGraphvizCode', extraInfoGraphvizCode);
 });
+function getcurrentusern(){
+const usuariocur = JSON.parse(localStorage.getItem("currentuser"));
+// cargarArbolNADesdeLocalStorage(); 
+console.log(usuariocur.nario)
+return usuariocur.nario
+}
