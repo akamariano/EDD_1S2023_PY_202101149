@@ -1,7 +1,14 @@
 
 digraph G {
-node [fontname="Arial"];
-"12345 - Juan Pérez\n2" [shape=rectangle, style=filled, fillcolor=white];
-"12345 - Juan Pérez\n2" -> "67890 - María García\n1";
-"67890 - María García\n1" [shape=rectangle, style=filled, fillcolor=white];
+  0 [label="/"];
+  file_1 [label="camp1.jpg"];
+  0_file_1 [label="undefined"];
+  file_1 [label="coo.png"];
+  0_file_1 [label="undefined"];
+  file_1 [label="ReporteCastañoAplicada.pdf"];
+  0_file_1 [label="undefined"];
+  file_1 [label="multipleoperacion.txt"];
+  0_file_1 [label="undefined"];
+  0_1 [label="undefined"];
+  1 [label="1"];
 }

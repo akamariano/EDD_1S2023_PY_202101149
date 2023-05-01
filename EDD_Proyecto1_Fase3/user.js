@@ -801,6 +801,7 @@ while (arbolContenedor.firstChild) {
     arbolContenedor.removeChild(arbolContenedor.firstChild);
 }
 generarArbolHtml(arbolnario.raiz, arbolContenedor);
+
 }
 function Muestraico(){
 mostrarTexto(getcurrentuserid());
@@ -810,8 +811,210 @@ while (arbolContenedor1.firstChild) {
 }
 ar = cargarArbolNADesdeLocalStorage();
 generarArbolHtml(ar.raiz, arbolContenedor1);
+// const arbolnario = getcurrentusern();
+//     const arbolNarioDot = obtenerGrafoDot(arbolnario);
+//     mostrarGrafo(arbolNarioDot);
+arbolnario = getcurrentusern();
+    const grafo = new grafoDirigido();
+    recorrerArbolYConstruirGrafo(arbolnario.raiz, grafo);
+    mostrarGrafoDirigido(grafo);
 }
 function mostrarTexto(texto) {
     const elementoH2 = document.querySelector('h2'); // o usa document.getElementById('id-del-h2')
   elementoH2.innerText = "Se encuentra en sesión "+texto;
   }
+  document.addEventListener('DOMContentLoaded', () => {
+    
+  });
+  
+  function getcurrentusern() {
+    const usuariocur = JSON.parse(localStorage.getItem("currentuser"));
+    console.log(usuariocur.nario);
+
+    // Cargar el árbol n-ario completo desde el almacenamiento local
+    const arbolnario = cargarArbolNADesdeLocalStorage();
+    return arbolnario;
+}
+// function generarGrafoDot(nodo, dot) {
+//     if (!nodo) {
+//         return;
+//     }
+
+//     let currentNodeName = `carpeta_${nodo.valor.replace(/ /g, "_")}`;
+
+//     // Añadir nodo actual al grafo
+//     dot.push(`"${currentNodeName}" [label="${nodo.valor}", shape=rectangle];`);
+
+//     // Añadir archivos como nodos
+//     if (nodo.matriz) {
+//         const archivos = nodo.matriz.convertedFiles;
+//         archivos.forEach(archivo => {
+//             const archivoNodeName = `archivo_${archivo.nombreArchivo.replace(/ /g, "_")}`;
+//             // Cambiar la forma a 'ellipse' y permitir que se ajuste al contenido
+//             dot.push(`"${archivoNodeName}" [label="${archivo.nombreArchivo}", shape=ellipse, fixedsize=false];`);
+//             dot.push(`"${currentNodeName}" -> "${archivoNodeName}";`);
+//         });
+//     }
+
+//     if (nodo.primero) {
+//         let aux = nodo.primero;
+//         while (aux) {
+//             // Añadir aristas entre nodo actual y subcarpetas
+//             let auxNodeName = `carpeta_${aux.valor.replace(/ /g, "_")}`;
+//             dot.push(`"${currentNodeName}" -> "${auxNodeName}";`);
+
+//             generarGrafoDot(aux, dot);
+//             aux = aux.siguiente;
+//         }
+//     }
+// }
+
+// function obtenerGrafoDot(arbolnario) {
+//   let dot = ["digraph G {"];
+
+//   // Establecer el motor de diseño a 'twopi'
+//   dot.push("rankdir=TB;");
+
+//   generarGrafoDot(arbolnario.raiz, dot);
+
+//   dot.push("}");
+
+//   return dot.join("\n");
+// }
+// function mostrarGrafo(dot) {
+//     // Selecciona el elemento contenedor en el que deseas mostrar el grafo
+//     const contenedor = d3.select("#arbol");
+  
+//     // Utiliza d3-graphviz para renderizar el grafo dentro del contenedor seleccionado
+//     contenedor.graphviz()
+//       .renderDot(dot);
+//   }
+class nodoMatrizAdyacencia{
+    constructor(valor){
+        this.siguiente = null
+        this.abajo = null
+        this.valor = valor
+    }
+}
+
+class grafoDirigido{
+    constructor(){
+        this.principal = null
+    }
+
+    insertarF(texto){
+        const nuevoNodo = new nodoMatrizAdyacencia(texto)
+        if(this.principal === null){
+            this.principal = nuevoNodo
+        }else{
+            let aux = this.principal
+            while(aux.abajo){
+                if(aux.valor === nuevoNodo.valor){
+                    return
+                }
+                aux = aux.abajo
+            }
+            aux.abajo = nuevoNodo
+        }
+    }
+
+    insertarC(padre, hijo){
+        const nuevoNodo = new nodoMatrizAdyacencia(hijo)
+        if(this.principal !== null && this.principal.valor === padre){
+            let aux = this.principal
+            while(aux.siguiente){
+                aux = aux.siguiente
+            }
+            aux.siguiente = nuevoNodo
+        }else{
+            this.insertarF(padre)
+            let aux = this.principal
+            while(aux){
+                if(aux.valor === padre){
+                    break;
+                }
+                aux = aux.abajo
+            }
+            if(aux !== null){
+                while(aux.siguiente){
+                    aux = aux.siguiente
+                }
+                aux.siguiente = nuevoNodo
+            }
+        }
+    }
+
+    insertarValores(padre, hijos){
+        let cadena = hijos.split(',')
+        for(let i = 0; i < cadena.length; i++){
+            this.insertarC(padre,cadena[i])
+        }
+    }
+
+    //Reporte modificado para trabajar con carpetas
+    grafica(){
+        let cadena = "graph grafoDirigido { rankdir=LR; node [shape=box]; \"/\"; node [shape = ellipse] ; layout=neato; sep=00; "; // Añade sep=1;
+        let auxPadre = this.principal
+        let auxHijo = this.principal
+        let peso = 0
+        while(auxPadre){
+            auxHijo = auxPadre.siguiente
+            let profundidad = auxPadre.valor.split('/')
+            let padre = ""
+            if(profundidad.length == 2 && profundidad[1] == ""){ peso = 1}
+            else if(profundidad.length == 2 && profundidad[1] != ""){ peso = 2 }
+            else { peso = profundidad.length }
+            if(auxPadre.valor != "/"){ padre = profundidad[profundidad.length-1] }
+            else { padre = "/" }
+            while(auxHijo){
+                cadena += "\"" + padre + "\"" + " -- " + "\"" + auxHijo.valor + "\"" + " [label=\"" + peso + "\"] "
+                auxHijo = auxHijo.siguiente
+            }
+            auxPadre = auxPadre.abajo
+        }
+        cadena += "}"
+        return cadena
+    }
+}
+
+const grafo =  new grafoDirigido()
+
+function insertar(){
+    let padre = document.getElementById("padre").value 
+    let hijos = document.getElementById("hijos").value 
+    grafo.insertarValores(padre,hijos)
+    refrescarGrafo()
+}
+
+function mostrarGrafoDirigido(grafo) {
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = grafo.grafica();
+    graphUrl=url+body
+    window.open(graphUrl, '_blank');
+    
+}
+function recorrerArbolYConstruirGrafo(nodo, grafo) {
+    if (!nodo) {
+        return;
+    }
+
+    let padre = nodo.valor;
+
+    if (nodo.matriz) {
+        const archivos = nodo.matriz.convertedFiles;
+        archivos.forEach(archivo => {
+            const hijo = archivo.nombreArchivo;
+            grafo.insertarValores(padre, hijo);
+        });
+    }
+
+    if (nodo.primero) {
+        let aux = nodo.primero;
+        while (aux) {
+            const hijo = aux.valor;
+            grafo.insertarValores(padre, hijo);
+            recorrerArbolYConstruirGrafo(aux, grafo);
+            aux = aux.siguiente;
+        }
+    }
+}
