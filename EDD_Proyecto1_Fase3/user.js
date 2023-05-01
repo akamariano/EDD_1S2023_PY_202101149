@@ -835,60 +835,7 @@ function mostrarTexto(texto) {
     const arbolnario = cargarArbolNADesdeLocalStorage();
     return arbolnario;
 }
-// function generarGrafoDot(nodo, dot) {
-//     if (!nodo) {
-//         return;
-//     }
 
-//     let currentNodeName = `carpeta_${nodo.valor.replace(/ /g, "_")}`;
-
-//     // Añadir nodo actual al grafo
-//     dot.push(`"${currentNodeName}" [label="${nodo.valor}", shape=rectangle];`);
-
-//     // Añadir archivos como nodos
-//     if (nodo.matriz) {
-//         const archivos = nodo.matriz.convertedFiles;
-//         archivos.forEach(archivo => {
-//             const archivoNodeName = `archivo_${archivo.nombreArchivo.replace(/ /g, "_")}`;
-//             // Cambiar la forma a 'ellipse' y permitir que se ajuste al contenido
-//             dot.push(`"${archivoNodeName}" [label="${archivo.nombreArchivo}", shape=ellipse, fixedsize=false];`);
-//             dot.push(`"${currentNodeName}" -> "${archivoNodeName}";`);
-//         });
-//     }
-
-//     if (nodo.primero) {
-//         let aux = nodo.primero;
-//         while (aux) {
-//             // Añadir aristas entre nodo actual y subcarpetas
-//             let auxNodeName = `carpeta_${aux.valor.replace(/ /g, "_")}`;
-//             dot.push(`"${currentNodeName}" -> "${auxNodeName}";`);
-
-//             generarGrafoDot(aux, dot);
-//             aux = aux.siguiente;
-//         }
-//     }
-// }
-
-// function obtenerGrafoDot(arbolnario) {
-//   let dot = ["digraph G {"];
-
-//   // Establecer el motor de diseño a 'twopi'
-//   dot.push("rankdir=TB;");
-
-//   generarGrafoDot(arbolnario.raiz, dot);
-
-//   dot.push("}");
-
-//   return dot.join("\n");
-// }
-// function mostrarGrafo(dot) {
-//     // Selecciona el elemento contenedor en el que deseas mostrar el grafo
-//     const contenedor = d3.select("#arbol");
-  
-//     // Utiliza d3-graphviz para renderizar el grafo dentro del contenedor seleccionado
-//     contenedor.graphviz()
-//       .renderDot(dot);
-//   }
 class nodoMatrizAdyacencia{
     constructor(valor){
         this.siguiente = null
@@ -1000,13 +947,13 @@ function recorrerArbolYConstruirGrafo(nodo, grafo) {
 
     let padre = nodo.valor;
 
-    if (nodo.matriz) {
-        const archivos = nodo.matriz.convertedFiles;
-        archivos.forEach(archivo => {
-            const hijo = archivo.nombreArchivo;
-            grafo.insertarValores(padre, hijo);
-        });
-    }
+    // if (nodo.matriz) {
+    //     const archivos = nodo.matriz.convertedFiles;
+    //     archivos.forEach(archivo => {
+    //         const hijo = archivo.nombreArchivo;
+    //         grafo.insertarValores(padre, hijo);
+    //     });
+    // }
 
     if (nodo.primero) {
         let aux = nodo.primero;
