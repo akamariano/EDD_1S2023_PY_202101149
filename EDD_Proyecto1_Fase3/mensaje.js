@@ -126,6 +126,22 @@ function loadChats(transmitterId) {
 newChatButton.addEventListener('click', () => {
     const newTransmitter = getcurrentuserid2();
     const newReceiver = prompt('Ingrese el carnet del receptor:');
+    const hashedCarnets = getHashedCarnets();
+
+    // Verifica si el carnet existe en la tabla hash
+    let carnetExists = false;
+    for (let i = 0; i < hashedCarnets.length; i++) {
+        if (hashedCarnets[i] && hashedCarnets[i].carnet === parseInt(newReceiver)) {
+            carnetExists = true;
+            break;
+        }
+    }
+
+    if (!carnetExists) {
+        alert('El carnet ingresado no existe.');
+        return;
+    }
+
     if (newTransmitter && newReceiver) {
         transmitter = newTransmitter;
         receiver = newReceiver;
@@ -147,7 +163,9 @@ sendMessageButton.addEventListener('click', () => {
         loadMessages();
     }
 });
-
+function getHashedCarnets() {
+    return JSON.parse(localStorage.getItem('tablaHash'));
+  }
 // // Carga los mensajes iniciales si ya existe un chat entre el transmisor y el receptor
 loadMessages();
 
@@ -162,6 +180,10 @@ function addNewContact(contactId) {
     contactDiv.addEventListener('click', () => {
         receiver = contactId;
         loadMessages();
+
+        // Muestra el carnet del contacto seleccionado en el elemento <h2>
+        const selectedContactCarnet = document.getElementById('selectedContactCarnet');
+        selectedContactCarnet.textContent = `Carnet del contacto: ${contactId}`;
     });
     sidebarChats.appendChild(contactDiv);
 }

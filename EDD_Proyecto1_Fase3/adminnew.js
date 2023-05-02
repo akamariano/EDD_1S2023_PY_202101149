@@ -110,27 +110,25 @@ class TablaHash{
     }
 
     busquedaUsuario(carnet){
-        let indice = this.calculoIndice(carnet)
+        let indice = this.calculoIndice(carnet);
         if(indice < this.capacidad){
             try{
-                if(this.tabla[indice] == null){
-                    alert("Bienvenido " + this.tabla[indice].usuario)
-                }else if(this.tabla[indice] != null && this.tabla[indice].carnet == carnet){
-                    alert("Bienvenido " + this.tabla[indice].usuario)
-                }else{
-                    let contador = 1
-                    indice = this.RecalculoIndice(carnet,contador)
-                    while(this.tabla[indice] != null){
-                        contador++
-                        indice = this.RecalculoIndice(carnet, contador)
+                if(this.tabla[indice] != null && this.tabla[indice].carnet == carnet){
+                    alert("Bienvenido " + this.tabla[indice].usuario);
+                } else {
+                    let contador = 1;
+                    indice = this.RecalculoIndice(carnet,contador);
+                    while(indice < this.capacidad && this.tabla[indice] != null){
                         if(this.tabla[indice].carnet == carnet){
-                            alert("Bienvenido " + this.tabla[indice].usuario)
-                            return
+                            alert("Bienvenido " + this.tabla[indice].usuario);
+                            return;
                         }
+                        contador++;
+                        indice = this.RecalculoIndice(carnet, contador);
                     }
                 }
-            }catch(err){
-                console.log("Hubo un error en busqueda")
+            } catch(err) {
+                console.log("Hubo un error en busqueda");
             }
         }
     }
@@ -280,9 +278,9 @@ document.addEventListener("DOMContentLoaded", function() {
     var obj = obtenerArrayDesdeLocalStorage();
     console.log("AA" + obtenerArrayDesdeLocalStorage())
     for (var elemento of obj) {
-        // console.log("Carnet:", elemento.carnet);
+        console.log("Carnet:", elemento.carnet);
         // console.log("Nombre:", elemento.nombre);
-        // console.log("Contraseña:", elemento.contraseña);
+        console.log("Contraseña:", elemento.contraseña);
         passencoded=encrypt(elemento.contraseña)
        
         tablaHash.insertar(elemento.carnet, elemento.nombre, passencoded);
