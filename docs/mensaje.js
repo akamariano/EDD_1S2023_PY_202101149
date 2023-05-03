@@ -162,6 +162,8 @@ sendMessageButton.addEventListener('click', () => {
         messageInput.value = '';
         loadMessages();
     }
+    generateGraphvizCodeWithExtraInfo(myBlockchain);
+    generateGraphvizCode(myBlockchain);
 });
 function getHashedCarnets() {
     return JSON.parse(localStorage.getItem('tablaHash'));

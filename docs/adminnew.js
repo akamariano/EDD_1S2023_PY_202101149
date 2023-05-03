@@ -114,13 +114,13 @@ class TablaHash{
         if(indice < this.capacidad){
             try{
                 if(this.tabla[indice] != null && this.tabla[indice].carnet == carnet){
-                    alert("Bienvenido " + this.tabla[indice].usuario);
+                    alert("Datos: " + this.tabla[indice].usuario +" Carnet: "+ this.tabla[indice].carnet);
                 } else {
                     let contador = 1;
                     indice = this.RecalculoIndice(carnet,contador);
                     while(indice < this.capacidad && this.tabla[indice] != null){
                         if(this.tabla[indice].carnet == carnet){
-                            alert("Bienvenido " + this.tabla[indice].usuario);
+                            alert("Datos: " + this.tabla[indice].usuario+" Carnet: "+ this.tabla[indice].carnet);
                             return;
                         }
                         contador++;
