@@ -1,8 +1,9 @@
 class nodoHash{
-    constructor(carnet, usuario, password){
+    constructor(carnet, usuario, password,grafo){
         this.carnet = carnet
         this.usuario = usuario
         this.password = password
+        this.grafo = grafo
     }
 }
 
@@ -13,9 +14,9 @@ class TablaHash{
         this.utilizacion = 0
     }
 
-    insertar(carnet, usuario, password){
+    insertar(carnet, usuario, password,grafo){
         let indice = this.calculoIndice(carnet)
-        const nuevoNodo = new nodoHash(carnet, usuario, password)
+        const nuevoNodo = new nodoHash(carnet, usuario, password,grafo)
         if(indice < this.capacidad){
             try{
                 if(this.tabla[indice] == null){
@@ -283,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Contraseña:", elemento.contraseña);
         passencoded=encrypt(elemento.contraseña)
        
-        tablaHash.insertar(elemento.carnet, elemento.nombre, passencoded);
+        tablaHash.insertar(elemento.carnet, elemento.nombre, passencoded,"");
       }
     console.log(tablaHash.tabla);
     tablaHash.genera_tabla();

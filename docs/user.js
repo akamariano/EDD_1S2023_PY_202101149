@@ -804,20 +804,18 @@ generarArbolHtml(arbolnario.raiz, arbolContenedor);
 
 }
 function Muestraico(){
-mostrarTexto(getcurrentuserid());
-const arbolContenedor1 = document.getElementById("arbol");
-while (arbolContenedor1.firstChild) {
-    arbolContenedor1.removeChild(arbolContenedor1.firstChild);
-}
-ar = cargarArbolNADesdeLocalStorage();
-generarArbolHtml(ar.raiz, arbolContenedor1);
-// const arbolnario = getcurrentusern();
-//     const arbolNarioDot = obtenerGrafoDot(arbolnario);
-//     mostrarGrafo(arbolNarioDot);
-arbolnario = getcurrentusern();
+    mostrarTexto(getcurrentuserid());
+    const arbolContenedor1 = document.getElementById("arbol");
+    while (arbolContenedor1.firstChild) {
+        arbolContenedor1.removeChild(arbolContenedor1.firstChild);
+    }
+    ar = cargarArbolNADesdeLocalStorage();
+    generarArbolHtml(ar.raiz, arbolContenedor1);
+    arbolnario = getcurrentusern();
     const grafo = new grafoDirigido();
     recorrerArbolYConstruirGrafo(arbolnario.raiz, grafo);
     mostrarGrafoDirigido(grafo);
+    guardarGrafoEnTablaHash(getcurrentuserid(), grafo);
 }
 function mostrarTexto(texto) {
     const elementoH2 = document.querySelector('h2'); // o usa document.getElementById('id-del-h2')
@@ -963,5 +961,43 @@ function recorrerArbolYConstruirGrafo(nodo, grafo) {
             recorrerArbolYConstruirGrafo(aux, grafo);
             aux = aux.siguiente;
         }
+    }
+}
+
+function grafoAJSON(grafo) {
+    let nodos = [];
+    let nodoAux = grafo.principal;
+
+    while (nodoAux) {
+        let nodo = {
+            valor: nodoAux.valor,
+            abajo: nodoAux.abajo ? nodoAux.abajo.valor : null,
+            siguiente: nodoAux.siguiente ? nodoAux.siguiente.valor : null
+        };
+        nodos.push(nodo);
+        nodoAux = nodoAux.abajo;
+    }
+
+    return JSON.stringify(nodos);
+}
+function guardarGrafoEnTablaHash(carnet, grafo) {
+    let tablaHash = JSON.parse(localStorage.getItem("tablaHash"));
+    let indexActualizado = -1;
+    let carnetNumber = Number(carnet);
+
+    for (let i = 0; i < tablaHash.length; i++) {
+        console.log("Comparando carnet:", carnetNumber, "con", tablaHash[i] ? tablaHash[i].carnet : null);
+        if (tablaHash[i] !== null && Number(tablaHash[i].carnet) === carnetNumber) {
+            indexActualizado = i;
+            break;
+        }
+    }
+
+    if (indexActualizado !== -1) {
+        tablaHash[indexActualizado].grafo = grafoAJSON(grafo);
+        localStorage.setItem("tablaHash", JSON.stringify(tablaHash));
+        console.log("Grafo actualizado en la posición", indexActualizado);
+    } else {
+        console.log("No se encontró el carnet en la tabla hash");
     }
 }
