@@ -33,11 +33,7 @@ class Block {
 }
 class Blockchain {
     constructor() {
-        this.chain = [this.createGenesisBlock()];
-    }
-
-    createGenesisBlock() {
-        return new Block(0, '01-01-00-00:00:00', '0000', '0000', 'Genesis Block', '0000');
+        this.chain = [];
     }
 
     getLatestBlock() {
@@ -45,8 +41,14 @@ class Blockchain {
     }
 
     addBlock(newBlock) {
-        newBlock.index = this.getLatestBlock().index + 1; // Modifica el índice del nuevo bloque
-        newBlock.previousHash = this.getLatestBlock().hash;
+        if (this.chain.length === 0) {
+            newBlock.index = 0;
+            newBlock.previousHash = '0000';
+        } else {
+            newBlock.index = this.getLatestBlock().index + 1;
+            newBlock.previousHash = this.getLatestBlock().hash;
+        }
+        newBlock.timestamp = new Date().toLocaleString();
         newBlock.hash = newBlock.calculateHash();
         this.chain.push(newBlock);
     }
