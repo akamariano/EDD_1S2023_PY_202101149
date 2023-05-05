@@ -100,7 +100,22 @@ function loadMessages() {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
             messageDiv.classList.add(block.transmitter === transmitter ? 'sent' : 'received');
-            messageDiv.textContent = decryptedMessage;
+            
+            // Adding transmitter, receiver, and timestamp information to each message
+            const messageInfo = document.createElement('p');
+            messageInfo.classList.add('message-info');
+            if (block.transmitter === transmitter) {
+                messageInfo.innerHTML = `Enviado a: ${block.receiver} | Fecha y Hora: ${block.timestamp}`;
+            } else {
+                messageInfo.innerHTML = `Recibido de: ${block.transmitter} | Fecha y Hora: ${block.timestamp}`;
+            }
+            messageDiv.appendChild(messageInfo);
+            
+            const messageContent = document.createElement('p');
+            messageContent.classList.add('message-content');
+            messageContent.textContent = decryptedMessage;
+            messageDiv.appendChild(messageContent);
+
             chatWindowMessages.appendChild(messageDiv);
         }
     });
